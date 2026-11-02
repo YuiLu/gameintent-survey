@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "test": "node --test tests/analysis.test.mjs tests/cos.test.mjs tests/database.test.mjs tests/errors.test.mjs",
+    "test": "node --test tests/analysis.test.mjs tests/cos.test.mjs tests/database.test.mjs tests/errors.test.mjs tests/database-tls.test.mjs",
     "typecheck": "tsc --noEmit",
     "test:flow": "tsx tests/run-flow.ts"
   },

@@ -13,7 +13,7 @@
 | 变量 | 值 |
 |---|---|
 | `DATABASE_URL` | Supabase **Transaction pooler** URI，只填 EdgeOne 服务端环境变量 |
-| `DATABASE_CA_CERT` | 如 TLS 验证需要，粘贴 Supabase Database Settings 提供的 PEM 根证书；不关闭证书校验 |
+| `DATABASE_CA_CERT` | 可选；已内置 Supabase Database Settings 链接提供的官方公开根证书，仅对 Supabase 数据库主机生效。此变量用于额外覆盖，不关闭证书校验 |
 | `STUDY_ADMIN_KEY` | 自行生成随机管理密钥，例如本机执行 `openssl rand -hex 32`；自行安全保存 |
 | `STUDY_INITIAL_POOL` | `1`；空库首次读取配置时初始化 484 条候选题目，不覆盖已有题目 |
 
