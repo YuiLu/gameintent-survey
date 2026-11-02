@@ -1,4 +1,4 @@
-export const VERSION = '2.0';
+export const VERSION = '2.1';
 export const STUDY_ID = 'game-intention-v2';
 export const GAMES = [
  {id:'aoe2',en:'Age of Empires II',zh:'帝国时代 II',genre:'RTS',size:18826,color:'#b99761'},
@@ -27,7 +27,7 @@ export const DESCRIPTION_OPTIONS = [
  {value:'insufficient',title:'画面信息不足',en:'Insufficient visual evidence',detail:'连主要目标也难以从这段画面判断。'},
  {value:'unfamiliar',title:'不熟悉这个具体局面',en:'Unfamiliar situation',detail:'因为缺少相关游戏知识而难以判断。'},
 ] as const;
-export const DEFAULT_CONFIG = {version:VERSION,title:'Game-Intention',datasetRevision:'',contact:'',compensation:'',privacy:'不收集真实姓名、游戏账号或联系方式。我们会记录回答、观看与播放状态；研究结果以去标识形式保存和发布。',clipsPerGame:40,ratersPerClip:5,participantsPerGame:8,seed:'game-intention-v2-2026',bootstrapReplicates:5000,gameSizes:Object.fromEntries(GAMES.map(g=>[g.id,g.size]))};
+export const DEFAULT_CONFIG = {version:VERSION,title:'Game-Intention',datasetRevision:'',contact:'',compensation:'',privacy:'不收集真实姓名、游戏账号或联系方式。我们会记录回答、观看与播放状态；研究结果以去标识形式保存和发布。',privacyEn:'We do not collect real names, gaming accounts, or contact details. We record responses and video playback information. Research results are stored and released in de-identified form.',clipsPerGame:40,ratersPerClip:5,participantsPerGame:20,mainPerParticipant:10,seed:'game-intention-v2-2026',bootstrapReplicates:5000,gameSizes:Object.fromEntries(GAMES.map(g=>[g.id,g.size]))};
 export type LabelJudgment = typeof LABEL_OPTIONS[number]['value'];
 export type DescriptionJudgment = typeof DESCRIPTION_OPTIONS[number]['value'];
 export type StudyQuestion = {id:string;game:string;video_id:string;target_id:string;source_cluster_id:string;dataset_revision:string;video_url:string;task_en:string;task_zh:string;labels:{id:string;en:string;zh:string;definition_en:string;definition_zh:string}[];description_en:string;description_zh:string;translation_status:'pending'|'machine'|'reviewed';translation_provenance?:string;label_scope:string;video_sha256?:string;duration:number;kind:'main'|'practice'|'control_positive'|'control_negative';media_verified:boolean;reviewed:boolean;expected?:{label_support:string;description_support:string};provenance?:Record<string,unknown>};

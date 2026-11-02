@@ -14,7 +14,7 @@ assert.equal(typeof handler,'function');
 const env={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_'+'fixture'.repeat(5),STUDY_GATEWAY_KEY:'a'.repeat(64)};
 const invoke=(url,init)=>handler(new Request(url,init));
 const health=await proxyStudyApi(new Request('https://survey.example/api/health'),env,invoke);
-assert.equal(health.status,200);assert.deepEqual(await health.json(),{ok:true,version:'2.0'});
+assert.equal(health.status,200);assert.deepEqual(await health.json(),{ok:true,version:'2.1'});
 assert.equal((await handler(new Request(env.STUDY_API_URL))).status,401);
 assert.equal((await proxyStudyApi(new Request('https://survey.example/api/config'),env,invoke)).status,503);
 console.log('PASS: actual Supabase bundle boots in Deno, health works through signed ESA proxy, unsigned calls rejected, missing database fails closed. No production data accessed.');
