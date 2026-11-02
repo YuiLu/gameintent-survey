@@ -3,6 +3,10 @@ import process from 'node:process';
 import {proxyStudyApi} from '../lib/study/gateway.mjs';
 process.env.STUDY_GATEWAY_KEY='a'.repeat(64);
 delete process.env.DATABASE_URL;
+delete process.env.SUPABASE_DB_URL;
+// Supabase's hosted Deno runtime forbids environment mutation. Reproduce that
+// constraint before loading the actual deployable function bundle.
+process.env=new Proxy({...process.env},{set(){throw new Error('Hosted environment is read-only');},deleteProperty(){throw new Error('Hosted environment is read-only');}});
 let handler;
 Deno.serve=fn=>{handler=fn;};
 await import('../supabase/functions/survey-api/index.mjs');

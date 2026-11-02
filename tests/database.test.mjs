@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {PGlite} from '@electric-sql/pglite';
-import {compileSql,createDatabase} from '../lib/study/database.mjs';
+import {compileSql,createDatabase,databaseUrl} from '../lib/study/database.mjs';
+
+test('hosted database connection fallback never mutates read-only environment',()=>{
+  const provided=Object.freeze({SUPABASE_DB_URL:'provider-fixture'});
+  assert.equal(databaseUrl(provided),'provider-fixture');
+  assert.equal(databaseUrl(Object.freeze({...provided,DATABASE_URL:'override-fixture'})),'override-fixture');
+  assert.equal(databaseUrl(Object.freeze({})),undefined);
+});
 
 test('PostgreSQL preserves quoted question marks and upserts',()=>{
   assert.equal(compileSql("SELECT '?' FROM studies WHERE id=?"),"SELECT '?' FROM survey.studies WHERE id=$1");

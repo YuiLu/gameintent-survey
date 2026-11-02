@@ -3,7 +3,7 @@ import process from 'node:process';
 import demoMedia from '../../data/demo.json';
 import candidatePool from '../../data/pool.json';
 import { publicFailure } from './errors.mjs';
-import { database } from './database.mjs';
+import { database, databaseUrl } from './database.mjs';
 const env=process.env;
 import { GAMES, VERSION, STUDY_ID, DEFAULT_CONFIG, type StudyQuestion } from './constants';
 import { HttpError, bodyJson, validateAnswers, validateQuestion, readiness, safeVideoUrl } from './validation';
@@ -12,7 +12,7 @@ const now=()=>new Date().toISOString();
 const uuid=()=>crypto.randomUUID();
 const random=()=>Array.from(crypto.getRandomValues(new Uint8Array(24)),b=>b.toString(16).padStart(2,'0')).join('');
 export async function hash(t:string){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t))),b=>b.toString(16).padStart(2,'0')).join('')}
-function db(){if(!env.DATABASE_URL)throw new HttpError('研究数据库尚未配置。',503);return database();}
+function db(){if(!databaseUrl(env))throw new HttpError('研究数据库尚未配置。',503);return database();}
 const json=(data:unknown,status=200,headers:Record<string,string>={})=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 const cookie=(r:Request,key:string)=>r.headers.get('cookie')?.split(';').map(t=>t.trim()).find(t=>t.startsWith(key+'='))?.slice(key.length+1);
 function sessionCookie(r:Request,name:string,token:string,age=2592000){return `${name}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${new URL(r.url).protocol==='https:'?'; Secure':''}`}
