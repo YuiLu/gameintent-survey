@@ -1,0 +1,127 @@
+# game|label|Chinese name|English explanation|Chinese explanation
+*|other|其他目标|A tactical goal outside the listed native categories; not a substitute for missing visual evidence.|不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。
+*|attack|进攻|Attack opposing players, units, or structures to damage or eliminate them.|进攻敌方玩家、单位或建筑，以造成伤害或消灭目标。
+*|defend|防守|Protect a position, objective, unit, or teammate against an opposing attack.|抵御对方进攻，保护位置、目标、单位或队友。
+*|retreat|撤退|Withdraw from a dangerous engagement or position.|从危险的交战或位置中后撤。
+*|disengage|脱离交战|Break contact and leave an ongoing engagement.|中止接触并脱离正在进行的交战。
+*|withdraw|后撤|Pull back from the current engagement or contested area.|从当前交战或争夺区域中后撤。
+*|escape|逃脱|Avoid an immediate threat and reach safety.|摆脱当前威胁，进入相对安全的位置。
+*|survival|维持生存|Avoid elimination while under immediate threat.|在面临直接威胁时避免被击杀。
+*|engage|接战|Initiate or commit to combat with opponents.|主动接触对手或投入交战。
+*|initiate|先手开战|Start a fight by committing an opening attack or control ability.|通过先手攻击或控制技能开启交战。
+*|push|推进|Advance pressure toward an opposing position or objective.|向对方位置或目标推进并施加压力。
+*|hold|守住位置|Maintain a defensive position or angle against opponents.|维持并守住防守位置或架枪角度。
+*|flank|侧翼包抄|Approach opponents from a side or rear route.|从侧方或后方路线接近对手。
+*|rotate|转移位置|Move to another area to change positioning, support, or objective pressure.|转移到其他区域，以调整站位、支援或目标压力。
+*|heal|恢复状态|Restore health or shields before further action.|恢复生命值或护盾，为后续行动做准备。
+*|scan|搜索敌情|Search for opponents or information about their positions.|搜索对手，获取其位置或行动信息。
+*|scout|侦察|Gather information about enemy positions, units, or development.|探查敌方位置、单位配置或发展情况。
+*|expand|开拓分矿|Establish an additional base to increase economy and production capacity.|建立额外基地，以扩大经济与生产能力。
+*|tech|发展科技|Advance a technology tier or unlock new units and capabilities.|提升科技阶段或解锁新的单位与能力。
+*|economy|发展经济|Increase income or resource efficiency to support future play.|提高收入或资源效率，为后续行动提供支持。
+*|open|开局建造|Execute an opening build or early development plan.|执行开局建造顺序或早期发展计划。
+*|tower_rush|前置塔压制|Build towers near an opponent to exert early pressure.|在对手附近修建防御塔，实施早期压制。
+*|teamfight|团战|Coordinate several teammates in a fight against the opposing team.|多名队友协同参与对敌方队伍的交战。
+*|gank|游走抓人|Collapse on a target with additional allies or an unexpected approach.|通过额外队友支援或意外路线，集中抓击目标。
+*|farm|打钱发育|Gain gold and experience from creeps, minions, or neutral camps.|通过小兵、野怪等获取金钱与经验。
+*|bait|诱导交战|Encourage an opponent to commit into a prepared response.|诱使对手采取行动，再利用预备的应对进行反制。
+*|ward|布控视野|Place or remove wards to gain information or deny enemy vision.|插眼或排眼，以获取信息或削弱敌方视野。
+*|dive|突入后排或越塔|Commit into a protected enemy position to reach a target.|突入对方受保护的位置，以攻击目标。
+*|pick|抓单击杀|Isolate and eliminate an opposing player outside a full team fight.|在大规模团战之外，抓住落单或暴露的敌方玩家进行击杀。
+*|duel|单挑交锋|Take a direct fight against a specific opposing player.|与特定敌方玩家进行直接交锋。
+*|buy|购置装备|Purchase weapons, armor, or utility for the round.|为当前回合购买武器、护甲或战术道具。
+*|force|强起购买|Spend limited funds on a competitive buy instead of saving for a later round.|在经济不足时投入资金强起，而非为后续回合存钱。
+*|eco|经济调整|Prioritize resource economy; the exact action depends on the game's rules.|优先调整资源与经济，具体方式依据本游戏机制判断。
+*|entry|突破首杀|Lead an attack into a defended area and seek the opening duel or kill.|率先进入敌方防守区域，争取突破交锋或首杀。
+*|clutch|残局取胜|Attempt to win a round from a disadvantage with few teammates remaining.|在己方剩余人数较少、局势不利的残局中争取赢下回合。
+*|default|默认控图|Spread out to gather information and pressure before committing to a site.|分散获取信息并施加地图压力，暂不决定最终攻点。
+*|execute|协同攻点|Commit a coordinated site attack, usually with planned utility.|通常配合预定道具，协同投入对据点的进攻。
+*|lurk|潜伏断后|Operate away from the main group to find gaps or punish rotations.|脱离主队潜伏，寻找空隙或截击敌方转移。
+*|post_plant|下包后控制|Protect the planted bomb or spike and prevent the opponent from defusing.|在炸弹或爆能器安放后保护它，阻止对手拆除。
+*|retake|回防夺点|Re-enter a captured site to regain control and, if needed, defuse.|重新进入已被占领的据点，夺回控制并在需要时拆除。
+*|rush|快速突进|Attack an area quickly with limited delay or setup.|减少等待与铺垫，快速突入目标区域。
+*|ult|使用终极技能|Use or commit an ultimate ability for a tactical purpose.|为战术目标使用或投入终极技能。
+*|smoke|使用烟雾|Use smoke to conceal movement or block opposing sightlines.|使用烟雾掩护行动或阻断对方视线。
+cs|save|保枪|Preserve surviving weapons and equipment rather than contest the current round.|放弃继续争夺当前回合，保留存活队员的武器和装备。
+cs|defuse|拆除炸弹|Attempt to defuse the planted bomb before it explodes.|尝试在爆炸前拆除已安放的炸弹。
+valorant|rotate|转点|Move between map areas or sites to change the attack or defense focus.|在地图区域或据点间转移，改变进攻或防守重心。
+cs|rotate|转点|Move between map areas or bombsites to change the attack or defense focus.|在地图区域或包点间转移，改变进攻或防守重心。
+valorant|plant|安放爆能器|Plant the spike at a valid site.|在有效据点安放爆能器。
+valorant|anti_eco|对抗经济局|Play against opponents on a low-resource buy while protecting the equipment advantage.|面对低经济配置的对手，在争胜的同时保护装备优势。
+valorant|eco|经济局存钱|Limit spending to preserve credits for later rounds.|限制当前回合支出，为后续回合保留资金。
+valorant|utility_clear|道具清点|Use abilities to clear dangerous angles or force opponents out of cover.|使用技能清查危险位置，或迫使对手离开掩体。
+valorant|vision_control|视线与信息控制|Gain or deny visual information using positioning or abilities.|通过站位或技能获取信息，或阻断对方视线。
+pubg|loot|搜集物资|Collect weapons, ammunition, armor, or other supplies.|收集武器、弹药、护甲及其他物资。
+pubg|control_zone|控制圈内位置|Secure or maintain a useful position relative to the safe zone.|占据或维持相对于安全区有利的位置。
+pubg|revive|扶起队友|Revive a knocked teammate.|扶起已被击倒的队友。
+apex|hold_zone|控制圈内位置|Maintain useful ground or cover in relation to the ring.|围绕安全圈维持有利地形或掩体控制。
+apex|banner_respawn|回收旗帜与重生|Retrieve a teammate's banner or use a respawn mechanism to return them to play.|回收队友旗帜或利用重生机制使其返回比赛。
+apex|finish|补杀|Eliminate an already knocked opponent.|补掉已被击倒的对手。
+apex|knock|击倒对手|Down an opposing player without necessarily eliminating the entire squad.|击倒敌方玩家，但不一定已将其小队全部淘汰。
+apex|reset|脱战重整|Create space to heal, reload, or reorganize before re-engaging.|争取空间恢复、换弹或整队，再决定是否重新接战。
+apex|scan_beacon|扫描信标|Use a beacon to obtain the ring or enemy information provided by that beacon type.|使用信标，获取对应信标提供的圈形或敌情信息。
+apex|third_party|第三方切入|Attack an engagement involving other squads to exploit their ongoing fight.|切入其他小队正在进行的战斗，利用其交战状态发起进攻。
+dota|counter_initiate|反手开团|Respond to an enemy initiation with a coordinated counterattack.|在敌方先手后，通过协同反击接团。
+dota|initiate|先手开团|Start a fight with an opening jump, attack, or disabling ability.|通过先手切入、攻击或控制技能开启交战。
+dota|roshan|争夺肉山|Contest or kill Roshan to secure its rewards.|争夺或击杀肉山，以获取其奖励。
+dota|secure_rune|控制神符|Obtain or deny a rune at its spawn or location.|获取神符，或阻止对方获得神符。
+dota|smoke|开雾行动|Use Smoke of Deceit to conceal a rotation or approach.|使用诡计之雾掩护转移或接近对手。
+dota|take_objective|获取地图目标|Secure a structure or neutral map objective.|夺取建筑或中立地图目标。
+lol|counter_engage|反手接团|Respond to an enemy engage with a counterattack.|在敌方开战后进行反击接团。
+lol|baron|争夺大龙|Contest or secure Baron Nashor.|争夺或拿下纳什男爵。
+lol|dragon|争夺小龙|Contest or secure a dragon objective.|争夺或拿下巨龙目标。
+lol|invade|入侵野区|Enter enemy jungle to take resources or pressure opposing players.|进入敌方野区，争夺资源或压迫对方玩家。
+lol|secure_objective|获取地图目标|Secure a neutral objective or important structure.|拿下中立目标或重要建筑。
+lol|siege|围攻建筑|Pressure a defended structure while maintaining a sustained attacking position.|维持进攻阵地，对敌方防守的建筑持续施压。
+lol|smite|惩戒争夺|Use Smite to secure or steal a neutral monster objective.|使用惩戒拿下或抢夺中立野怪目标。
+lol|dive|越塔进攻|Attack opponents under a defending turret.|在敌方防御塔保护范围内进攻对手。
+overwatch|dive|突入集火|Commit mobile heroes onto a vulnerable enemy target or backline.|利用机动英雄突入敌方薄弱目标或后排进行集火。
+overwatch|cleanup|收割残局|Finish remaining opponents after gaining a fight advantage.|在取得团战优势后，清除剩余对手。
+overwatch|contest|争夺目标|Enter or remain on the objective to contest control or progress.|进入或留在目标区域，争夺控制权或阻止推进。
+overwatch|focus|集中火力|Coordinate damage onto a shared opposing target.|将火力集中到同一个敌方目标上。
+overwatch|peel|保护队友|Protect a threatened teammate by disrupting or driving away attackers.|干扰或驱离攻击者，保护受到威胁的队友。
+overwatch|poke|远程消耗|Apply damage or pressure from a relatively safe distance before a full commitment.|在全面投入交战前，从相对安全的距离造成伤害或压力。
+overwatch|positioning|调整站位|Move to or maintain a useful angle, cover, range, or formation.|调整或维持有利角度、掩体、距离或阵型。
+overwatch|regroup|重新集结|Wait for or rejoin teammates before the next coordinated action.|等待或重新会合队友，再展开下一次协同行动。
+overwatch|stall|拖延目标|Delay enemy objective progress or extend a contest.|拖延敌方目标进度，或延长争夺时间。
+overwatch|swap|更换英雄|Change hero to alter composition or respond to the situation.|更换英雄，以调整阵容或应对局势。
+rl|aerial|空中争球|Use aerial movement to reach or play the ball.|通过空中机动接触或处理球。
+rl|boost_pad|补充氮气|Collect boost pads to replenish boost.|拾取氮气点，补充加速资源。
+rl|boost_starve|限制对手氮气|Deny opponents access to boost by controlling or taking boost resources.|控制或抢走氮气资源，限制对手补充。
+rl|challenge|上抢争球|Contest the opponent's next touch or possession.|上前争夺对手的下一次触球或控球。
+rl|clear|解围|Send the ball away from a threatening defensive area.|将球送离有威胁的防守区域。
+rl|counter_attack|反击|Turn a defensive recovery or turnover into an attacking opportunity.|利用防守回收或球权转换，迅速展开进攻。
+rl|demo|撞毁对手|Demolish an opposing car to remove it temporarily from play.|撞毁敌方车辆，使其暂时离场。
+rl|dribble|带球控球|Carry or control the ball through consecutive close touches.|通过连续近距离触球携带或控制球。
+rl|kickoff|开球争夺|Contest the ball from a kickoff restart.|在重新开球时争夺球权。
+rl|pass|传球配合|Send the ball to create a teammate's next touch or shot.|将球传出，为队友后续触球或射门创造机会。
+rl|possession|维持控球|Retain controlled touches rather than immediately conceding the ball.|保持可控触球，避免立即交出球权。
+rl|rotation|轮转换位|Reassign attacking and defensive coverage through coordinated positioning.|通过协同换位，轮换进攻与防守覆盖职责。
+rl|save|扑救守门|Prevent an opposing shot from entering the goal.|阻止对方射门进入球门。
+rl|shadow_defense|跟随防守|Track an attacker from a retreating position while covering the goal or next play.|在回撤站位中跟随进攻者，覆盖球门或其下一步处理。
+rl|shot|射门|Direct the ball toward the opposing goal to score.|将球送向对方球门，争取进球。
+rl|wall_play|沿墙处理|Use a wall to move, control, pass, or redirect the ball.|利用墙面移动、控球、传球或改变球路。
+sc2|contain|封锁压制|Restrict enemy movement or expansion without necessarily committing to a full assault.|限制敌方出门或扩张，不一定投入全面进攻。
+sc2|drop|空投骚扰|Transport units into a position using air transport for an attack or harassment.|利用运输单位空投部队，进行进攻或骚扰。
+sc2|harass|骚扰牵制|Apply limited attacks to disrupt workers, production, or positioning.|通过局部进攻干扰工人、生产或站位。
+sc2|macro|运营发展|Manage economy, production, and reinforcements for sustained strength.|管理经济、生产与增援，维持持续作战能力。
+sc2|transition|转型兵种|Shift the army composition or technology plan toward a different capability.|调整部队组成或科技路线，向新的作战能力转型。
+sc2|upgrade|升级攻防或技能|Research unit improvements or abilities.|研究单位属性强化或技能升级。
+aoe2|boom|爆经济|Expand villager production and economy for stronger later development.|扩大村民生产与经济规模，谋求后续发展优势。
+aoe2|castle_age|升城堡时代|Advance to the Castle Age to unlock its units and technologies.|升级城堡时代，解锁相应单位与科技。
+aoe2|control|控制地图|Maintain control of useful terrain, resources, or routes.|控制有利地形、资源点或通行路线。
+aoe2|counter|针对性反制|Produce or use units and upgrades that counter the opposing composition.|生产或使用克制对方阵容的兵种与升级。
+aoe2|drush|黑暗时代民兵快攻|Use an early Dark Age militia attack to disrupt the opponent.|通过黑暗时代的早期民兵攻击干扰对手。
+aoe2|eco|经济运营|Manage villagers and resources to support the intended build or army.|管理村民与资源分配，支持既定发展或军队计划。
+aoe2|feudal_rush|封建快攻|Apply military pressure during the Feudal Age.|在封建时代投入军事压力。
+aoe2|forward_build|前置建造|Construct military or defensive buildings near the opponent.|在接近对手的位置建造军事或防御建筑。
+aoe2|imp_age|升帝王时代|Advance to the Imperial Age for its technologies and army options.|升级帝王时代，获取相应科技与军队选择。
+aoe2|military_prod|生产军队|Train military units to build or reinforce the army.|训练军事单位，组建或补充军队。
+aoe2|raid|袭扰经济|Attack exposed villagers or economy away from the main battle.|攻击主战场之外暴露的村民或经济区域。
+aoe2|tech_upgrade|研究升级|Research economic or military improvements.|研究经济或军事强化升级。
+aoe2|wall|围墙防护|Build walls or complete a wall-off to restrict enemy access.|修筑围墙或完成封闭，限制敌方进入。
+wc3|counter_push|反推|Answer an enemy push by pressuring an opposing position.|通过向敌方位置施压回应其推进。
+wc3|creep|练级打野|Defeat neutral creep camps for experience, resources, or items.|击杀中立野怪，获取经验、资源或物品。
+wc3|creep_jack|抓练级|Attack an opponent while they are fighting a neutral creep camp.|在对手攻击中立野怪时突袭其部队。
+wc3|item_pickup|拾取物品|Collect a dropped or available item.|拾取掉落或可获取的物品。
+wc3|item_shop|商店购买|Purchase useful items from a shop.|在商店购买所需物品。
