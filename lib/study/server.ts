@@ -1,6 +1,7 @@
 import { cosConfig, signedCosUrl } from './cos.mjs';
 import demoMedia from '../../data/demo.json';
 import candidatePool from '../../data/pool.json';
+import { publicFailure } from './errors.mjs';
 import { database } from './database.mjs';
 const env=process.env;
 import { GAMES, VERSION, STUDY_ID, DEFAULT_CONFIG, type StudyQuestion } from './constants';
@@ -60,4 +61,4 @@ export async function route(request:Request){try{
  if(path==='admin/audit'&&method==='GET'){const r=await db().prepare('SELECT * FROM audit_events ORDER BY created_at').all();return json({events:r.results})}
  }
  throw new HttpError('未找到接口',404);
- }catch(e){if(e instanceof HttpError)return json({error:e.message},e.status);console.error('Study request failed');return json({error:'服务器暂时无法完成操作。回答不会被自动清除，请重试。'},500)}}
+ }catch(e){if(e instanceof HttpError)return json({error:e.message},e.status);const failure=publicFailure(e);console.error('Study request failed',failure.code);return json({error:failure.error,code:failure.code},failure.status)}}
