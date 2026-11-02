@@ -25,7 +25,7 @@ npx supabase@3.0.0 functions deploy survey-api --remote=mtcfejthbrpgfqbtvuws --u
 
 | 变量 | 值 |
 |---|---|
-| `DATABASE_URL` | 之前已验证可用的完整 Transaction pooler URI |
+| `DATABASE_URL` | 可选；默认使用该项目函数自带的 `SUPABASE_DB_URL`。需要覆盖时填之前已验证可用的完整 Transaction pooler URI |
 | `STUDY_ADMIN_KEY` | 之前的管理密钥 |
 | `STUDY_INITIAL_POOL` | `1`，只初始化空题库 |
 | `STUDY_GATEWAY_KEY` | 新生成至少 64 位十六进制随机串，在 ESA 填写相同值 |
