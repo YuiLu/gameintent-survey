@@ -4,6 +4,7 @@ import {createDatabase,useTestDatabase} from '../lib/study/database.mjs';
 import {readFileSync} from 'node:fs';
 import {createServer} from 'node:http';
 import {spawn} from 'node:child_process';
+import {proxyStudyApi,receiveStudyApi} from '../lib/study/gateway.mjs';
 Object.assign(process.env,{NODE_ENV:'test'});
 process.env.DATABASE_URL='test-only-not-a-connection';
 process.env.STUDY_ADMIN_KEY='fixture-admin-private-secret';
@@ -13,10 +14,14 @@ const pg=new PGlite();await pg.exec(readFileSync('supabase/001_schema.sql','utf8
 useTestDatabase(createDatabase({query:async(s:any,v:any)=>(await pg.query(s,v)).rows,
   transaction:(fn:any)=>pg.transaction(tx=>fn(async(s:any,v:any)=>(await tx.query(s,v)).rows))}));
 const {route}=await import('../lib/study/server');
+const gatewayEnv={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_ANON_KEY:'eyJfixture.payload.signature',STUDY_GATEWAY_KEY:'a'.repeat(64)};
+const handler=process.env.STUDY_TEST_GATEWAY==='1'
+  ? (request:Request)=>proxyStudyApi(request,gatewayEnv,async(url:any,init:any)=>receiveStudyApi(new Request(url,init),gatewayEnv.STUDY_GATEWAY_KEY,route))
+  : route;
 const server=createServer(async(req,res)=>{
   try{const chunks=[];for await(const b of req)chunks.push(b);
     const body=Buffer.concat(chunks);const request=new Request('http://127.0.0.1:5180'+req.url,{method:req.method,headers:req.headers as any,...body.length?{body}: {}});
-    const response=await route(request);res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));
+    const response=await handler(request);res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));
   }catch{res.writeHead(500);res.end('Test harness failed');}
 });
 await new Promise<void>(resolve=>server.listen(5180,'127.0.0.1',resolve));

@@ -1,4 +1,5 @@
 import { cosConfig, signedCosUrl } from './cos.mjs';
+import process from 'node:process';
 import demoMedia from '../../data/demo.json';
 import candidatePool from '../../data/pool.json';
 import { publicFailure } from './errors.mjs';

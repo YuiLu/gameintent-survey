@@ -6,4 +6,7 @@ node_modules/
 next-env.d.ts
 work/
 outputs/
+dist-esa/
+supabase/functions/survey-api/index.mjs
+supabase/.temp/
 .DS_Store

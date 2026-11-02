@@ -1,0 +1,7 @@
+{
+  "name": "gameintent-survey",
+  "installCommand": "npm ci --registry=https://registry.npmjs.org --fetch-retries=4",
+  "buildCommand": "npm run build:esa",
+  "entry": "./esa/worker.mjs",
+  "assets": {"directory": "./dist-esa"}
+}

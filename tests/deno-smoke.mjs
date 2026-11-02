@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import process from 'node:process';
+import {proxyStudyApi} from '../lib/study/gateway.mjs';
+process.env.STUDY_GATEWAY_KEY='a'.repeat(64);
+delete process.env.DATABASE_URL;
+let handler;
+Deno.serve=fn=>{handler=fn;};
+await import('../supabase/functions/survey-api/index.mjs');
+assert.equal(typeof handler,'function');
+const env={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_ANON_KEY:'eyJfixture.payload.signature',STUDY_GATEWAY_KEY:'a'.repeat(64)};
+const invoke=(url,init)=>handler(new Request(url,init));
+const health=await proxyStudyApi(new Request('https://survey.example/api/health'),env,invoke);
+assert.equal(health.status,200);assert.deepEqual(await health.json(),{ok:true,version:'2.0'});
+assert.equal((await handler(new Request(env.STUDY_API_URL))).status,401);
+assert.equal((await proxyStudyApi(new Request('https://survey.example/api/config'),env,invoke)).status,503);
+console.log('PASS: actual Supabase bundle boots in Deno, health works through signed ESA proxy, unsigned calls rejected, missing database fails closed. No production data accessed.');

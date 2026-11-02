@@ -1,0 +1,5 @@
+project_id = "gameintent-survey"
+
+[functions.survey-api]
+verify_jwt = true
+entrypoint = "./functions/survey-api/index.mjs"
