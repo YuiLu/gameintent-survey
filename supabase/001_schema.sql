@@ -1,8 +1,7 @@
 -- Safe to rerun: preserves existing rows and checks expected column structure.
 BEGIN;
 CREATE SCHEMA IF NOT EXISTS survey;
-SET LOCAL search_path TO survey;
-CREATE TABLE IF NOT EXISTS analysis_runs (
+CREATE TABLE IF NOT EXISTS survey.analysis_runs (
 	id text PRIMARY KEY NOT NULL,
 	study_id text NOT NULL,
 	input_hash text NOT NULL,
@@ -10,7 +9,7 @@ CREATE TABLE IF NOT EXISTS analysis_runs (
 	created_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS assignments (
+CREATE TABLE IF NOT EXISTS survey.assignments (
 	id text PRIMARY KEY NOT NULL,
 	panel_id text NOT NULL,
 	question_id text NOT NULL,
@@ -19,8 +18,8 @@ CREATE TABLE IF NOT EXISTS assignments (
 	repeat_of text
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS assignments_panel_order ON assignments (panel_id,ordinal);
-CREATE TABLE IF NOT EXISTS audit_events (
+CREATE UNIQUE INDEX IF NOT EXISTS assignments_panel_order ON survey.assignments (panel_id,ordinal);
+CREATE TABLE IF NOT EXISTS survey.audit_events (
 	id text PRIMARY KEY NOT NULL,
 	actor text NOT NULL,
 	action text NOT NULL,
@@ -28,14 +27,14 @@ CREATE TABLE IF NOT EXISTS audit_events (
 	created_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS drafts (
+CREATE TABLE IF NOT EXISTS survey.drafts (
 	assignment_id text PRIMARY KEY NOT NULL,
 	participant_id text NOT NULL,
 	payload text NOT NULL,
 	updated_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS panels (
+CREATE TABLE IF NOT EXISTS survey.panels (
 	id text PRIMARY KEY NOT NULL,
 	study_id text NOT NULL,
 	game text NOT NULL,
@@ -43,8 +42,8 @@ CREATE TABLE IF NOT EXISTS panels (
 	created_at text NOT NULL
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS panels_game_slot ON panels (study_id,game,slot);
-CREATE TABLE IF NOT EXISTS participants (
+CREATE UNIQUE INDEX IF NOT EXISTS panels_game_slot ON survey.panels (study_id,game,slot);
+CREATE TABLE IF NOT EXISTS survey.participants (
 	id text PRIMARY KEY NOT NULL,
 	panel_id text,
 	game text NOT NULL,
@@ -61,10 +60,10 @@ CREATE TABLE IF NOT EXISTS participants (
 	completed_at text
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS participants_panel ON participants (panel_id);
-CREATE UNIQUE INDEX IF NOT EXISTS participants_session ON participants (session_hash);
-CREATE UNIQUE INDEX IF NOT EXISTS participants_resume ON participants (resume_hash);
-CREATE TABLE IF NOT EXISTS questions (
+CREATE UNIQUE INDEX IF NOT EXISTS participants_panel ON survey.participants (panel_id);
+CREATE UNIQUE INDEX IF NOT EXISTS participants_session ON survey.participants (session_hash);
+CREATE UNIQUE INDEX IF NOT EXISTS participants_resume ON survey.participants (resume_hash);
+CREATE TABLE IF NOT EXISTS survey.questions (
 	id text PRIMARY KEY NOT NULL,
 	study_id text NOT NULL,
 	game text NOT NULL,
@@ -75,7 +74,7 @@ CREATE TABLE IF NOT EXISTS questions (
 	created_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS responses (
+CREATE TABLE IF NOT EXISTS survey.responses (
 	assignment_id text PRIMARY KEY NOT NULL,
 	participant_id text NOT NULL,
 	payload text NOT NULL,
@@ -83,7 +82,7 @@ CREATE TABLE IF NOT EXISTS responses (
 	submitted_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS studies (
+CREATE TABLE IF NOT EXISTS survey.studies (
 	id text PRIMARY KEY NOT NULL,
 	status text NOT NULL,
 	config text NOT NULL,
@@ -92,7 +91,7 @@ CREATE TABLE IF NOT EXISTS studies (
 	created_at text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS media_assets (
+CREATE TABLE IF NOT EXISTS survey.media_assets (
 	question_id text PRIMARY KEY NOT NULL,
 	storage_key text NOT NULL,
 	sha256 text NOT NULL,

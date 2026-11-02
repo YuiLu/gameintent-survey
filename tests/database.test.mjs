@@ -8,6 +8,14 @@ test('PostgreSQL preserves quoted question marks and upserts',()=>{
   assert.equal(compileSql("SELECT '?' FROM studies WHERE id=?"),"SELECT '?' FROM survey.studies WHERE id=$1");
   assert.match(compileSql('INSERT OR IGNORE INTO responses VALUES (?)'),/survey.responses VALUES \(\$1\) ON CONFLICT DO NOTHING$/);
 });
+test('initialization always qualifies table names instead of relying on session search_path',()=>{
+  const sql=fs.readFileSync('supabase/001_schema.sql','utf8');
+  const creates=[...sql.matchAll(/CREATE TABLE IF NOT EXISTS ([\w.]+)/g)].map(m=>m[1]);
+  assert.equal(creates.length,10);
+  assert.ok(creates.every(name=>name.startsWith('survey.')));
+  assert.doesNotMatch(sql,/SET LOCAL search_path/);
+  assert.equal([...sql.matchAll(/ALTER TABLE survey\.\w+ ENABLE ROW LEVEL SECURITY/g)].length,10);
+});
 test('real PostgreSQL schema, atomic batches, unique claims and immutable responses',async()=>{
   const pg=new PGlite();await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
   const db=createDatabase({query:async(s,v)=>(await pg.query(s,v)).rows,
