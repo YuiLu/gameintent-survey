@@ -30,6 +30,17 @@ test('rejects cross-site, unsigned, expired and tampered requests before reachin
 });
 test('fails closed for incomplete configuration, invalid upstream and oversized body',async()=>{
   const unexpected=()=>{throw Error('must not send');};
-  for(const invalid of [{},{...env,STUDY_API_URL:'https://evil.example'},{...env,STUDY_GATEWAY_KEY:'weak'}])assert.equal((await proxyStudyApi(new Request(publicUrl),invalid,unexpected)).status,503);
+  for(const invalid of [{},{...env,STUDY_API_URL:'https://evil.example'},{...env,STUDY_GATEWAY_KEY:'weak'},{...env,SUPABASE_PUBLISHABLE_KEY:'sb_secret_must_never_be_used'}])assert.equal((await proxyStudyApi(new Request(publicUrl),invalid,unexpected)).status,503);
   assert.equal((await proxyStudyApi(new Request(publicUrl,{method:'POST',body:'x'.repeat(4000001)}),env,unexpected)).status,413);
+});
+
+test('ESA short publishable key uses apikey and retains the signed gateway check',async()=>{
+  const shortEnv={...env,SUPABASE_PUBLISHABLE_KEY:'sb_publishable_'+'fixture'.repeat(5)};
+  assert.ok(shortEnv.SUPABASE_PUBLISHABLE_KEY.length<=200);
+  const response=await proxyStudyApi(new Request(publicUrl),shortEnv,async(url,init)=>{
+    assert.equal(init.headers.apikey,shortEnv.SUPABASE_PUBLISHABLE_KEY);
+    assert.equal(init.headers.Authorization,undefined);
+    return receiveStudyApi(new Request(url,init),shortEnv.STUDY_GATEWAY_KEY,()=>Response.json({ok:true}));
+  });
+  assert.equal(response.status,200);assert.deepEqual(await response.json(),{ok:true});
 });

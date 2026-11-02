@@ -39,10 +39,10 @@ ESA → 函数和 Pages → `gameintent-survey` → 基本信息 → 函数变�
 | 变量 | 值 |
 |---|---|
 | `STUDY_API_URL` | `https://mtcfejthbrpgfqbtvuws.supabase.co/functions/v1/survey-api` |
-| `SUPABASE_ANON_KEY` | Supabase 项目设置 → API Keys → Legacy API keys 中的 `anon` JWT；不要用 `service_role`，不要用 `sb_publishable_…` 替代 |
+| `SUPABASE_PUBLISHABLE_KEY` | Supabase 项目设置 → API Keys 中以 `sb_publishable_` 开头的公开密钥，本项目为 46 字符，适配 ESA 每变量 200 字符限制；不要用 `sb_secret_` 或 `service_role` |
 | `STUDY_GATEWAY_KEY` | 与 Supabase Secrets 完全相同，勾选加密存储 |
 
-三个变量都只用于 ESA 函数，不添加 `NEXT_PUBLIC_` 前缀。ESA 不需要保存数据库密码、管理密钥或 COS 密钥。API 转发经过短时有效的 HMAC 签名，Supabase 另外保留平台 JWT 校验。浏览器的参与者 Cookie 和后台认证在签名信封中传递，Supabase URL 不充当受试者会话域名。
+三个变量都只用于 ESA 函数，不添加 `NEXT_PUBLIC_` 前缀。ESA 不需要保存数据库密码、管理密钥或 COS 密钥。公开密钥通过 `apikey` 请求头发送，Supabase 函数继续保留 `verify_jwt = true` 的兼容网关检查，并由私密 HMAC 签名验证 ESA 调用方。浏览器的参与者 Cookie 和后台认证在签名信封中传递，Supabase URL 不充当受试者会话域名。旧 Node 配置的 `SUPABASE_ANON_KEY` 仍可兼容，但长 JWT 不再填写到 ESA。
 
 保存变量后重新构建并发布生产版本，变量才会进入新版本。先检查首页、`/api/config` 的真实数据库读取、演示视频、后台未登录 401、未分配视频 403，再绑定正式域名。单独检查 `/api/health` 不足以证明回收正常。正式问卷继续保持 `draft`，不写入测试回答。
 

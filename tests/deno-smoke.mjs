@@ -11,7 +11,7 @@ let handler;
 Deno.serve=fn=>{handler=fn;};
 await import('../supabase/functions/survey-api/index.mjs');
 assert.equal(typeof handler,'function');
-const env={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_ANON_KEY:'eyJfixture.payload.signature',STUDY_GATEWAY_KEY:'a'.repeat(64)};
+const env={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_'+'fixture'.repeat(5),STUDY_GATEWAY_KEY:'a'.repeat(64)};
 const invoke=(url,init)=>handler(new Request(url,init));
 const health=await proxyStudyApi(new Request('https://survey.example/api/health'),env,invoke);
 assert.equal(health.status,200);assert.deepEqual(await health.json(),{ok:true,version:'2.0'});

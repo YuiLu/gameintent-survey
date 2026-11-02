@@ -14,7 +14,7 @@ const pg=new PGlite();await pg.exec(readFileSync('supabase/001_schema.sql','utf8
 useTestDatabase(createDatabase({query:async(s:any,v:any)=>(await pg.query(s,v)).rows,
   transaction:(fn:any)=>pg.transaction(tx=>fn(async(s:any,v:any)=>(await tx.query(s,v)).rows))}));
 const {route}=await import('../lib/study/server');
-const gatewayEnv={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_ANON_KEY:'eyJfixture.payload.signature',STUDY_GATEWAY_KEY:'a'.repeat(64)};
+const gatewayEnv={STUDY_API_URL:'https://fixture.supabase.co/functions/v1/survey-api',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_'+ 'fixture'.repeat(5),STUDY_GATEWAY_KEY:'a'.repeat(64)};
 const handler=process.env.STUDY_TEST_GATEWAY==='1'
   ? (request:Request)=>proxyStudyApi(request,gatewayEnv,async(url:any,init:any)=>receiveStudyApi(new Request(url,init),gatewayEnv.STUDY_GATEWAY_KEY,route))
   : route;
