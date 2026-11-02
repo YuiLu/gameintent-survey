@@ -15,6 +15,9 @@ test('real PostgreSQL schema, atomic batches, unique claims and immutable respon
   const put=(s,...v)=>db.prepare(s).bind(...v);
   await put('INSERT INTO studies(id,status,config,created_at) VALUES (?,?,?,?)','s','draft','{}','now').run();
   assert.equal((await put('SELECT COUNT(*) AS n FROM studies').first()).n,1);
+  // Reinitialization must preserve existing study configuration and answers.
+  await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
+  assert.equal((await put('SELECT status FROM studies WHERE id=?','s').first()).status,'draft');
   await assert.rejects(db.batch([put('INSERT INTO studies(id,status,config,created_at) VALUES (?,?,?,?)','rollback','draft','{}','now'),put('INSERT INTO studies(id,status,config,created_at) VALUES (?,?,?,?)','s','draft','{}','now')]));
   assert.equal(await put('SELECT id FROM studies WHERE id=?','rollback').first(),null);
   await put('INSERT INTO panels(id,study_id,game,slot,created_at) VALUES (?,?,?,?,?)','panel','s','cs',0,'now').run();
@@ -24,5 +27,17 @@ test('real PostgreSQL schema, atomic batches, unique claims and immutable respon
   await put('INSERT OR IGNORE INTO responses(assignment_id,participant_id,payload,digest,submitted_at) VALUES (?,?,?,?,?)','a','p1','original','hash','now').run();
   await put('INSERT OR IGNORE INTO responses(assignment_id,participant_id,payload,digest,submitted_at) VALUES (?,?,?,?,?)','a','p2','overwrite','hash','now').run();
   assert.equal((await put('SELECT payload FROM responses WHERE assignment_id=?','a').first()).payload,'original');
+  await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
+  assert.equal((await put('SELECT payload FROM responses WHERE assignment_id=?','a').first()).payload,'original');
+  await pg.close();
+});
+test('initialization fills missing tables and rejects incompatible existing columns',async()=>{
+  const pg=new PGlite();
+  await pg.exec('CREATE SCHEMA survey; CREATE TABLE survey.analysis_runs(id text PRIMARY KEY NOT NULL,study_id text NOT NULL,input_hash text NOT NULL,result text NOT NULL,created_at text NOT NULL);');
+  await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
+  assert.equal((await pg.query('SELECT COUNT(*) AS n FROM survey.questions')).rows[0].n,0);
+  await pg.exec('ALTER TABLE survey.analysis_runs DROP COLUMN result');
+  await assert.rejects(pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8')),/survey schema is incompatible.*analysis_runs.result/);
+  await pg.exec('ROLLBACK');
   await pg.close();
 });

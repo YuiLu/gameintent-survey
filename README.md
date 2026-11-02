@@ -4,7 +4,7 @@
 
 ## 导入 EdgeOne Pages
 
-1. Supabase 项目 `gameintent-survey` 已创建，项目引用 `mtcfejthbrpgfqbtvuws`。进入 SQL Editor，执行 [supabase/001_schema.sql](supabase/001_schema.sql)，只执行一次。
+1. Supabase 项目 `gameintent-survey` 已创建，项目引用 `mtcfejthbrpgfqbtvuws`。进入 SQL Editor，执行 [supabase/001_schema.sql](supabase/001_schema.sql)，可重复执行，保留已有数据；已有列结构不兼容时会报出具体字段。
 2. Supabase 顶部 Connect → Transaction pooler，复制完整 PostgreSQL URI，替换密码并对密码中的特殊字符做 URL 编码。连接端口为 6543；主机名从控制台复制，不要根据项目 URL 猜测。免费版无需购买 IPv4 插件。
 3. [EdgeOne Pages 控制台](https://console.cloud.tencent.com/edgeone/pages) → 创建项目 → 导入 Git 仓库 → 授权 GitHub 的本仓库 `YuiLu/gameintent-survey` → 分支 `main`。
 4. 构建配置：框架 **Next.js**，根目录 `./`，安装 `npm ci`，构建 `npm run build`，输出 `.next`，Node.js `22.11.0`。仓库 `edgeone.json` 已保存对应设置。不要选择静态导出或输出 `out`。
@@ -19,7 +19,7 @@
 
 不要添加 `NEXT_PUBLIC_` 前缀。无需 Supabase anon key 或 service_role key，浏览器不能直写数据库。数据库连接池每个函数实例一条连接，关闭命名预编译与流水线；批量操作在事务中执行。答题名额通过行锁与唯一约束分配。
 
-Supabase 使用独立 `survey` schema，启用 RLS、不添加匿名策略，不将该 schema 加入 Data API 的 Exposed schemas。迁移脚本不删表；正式版本更新应新增迁移，不重复执行首次建表脚本。当前连接使用项目数据库身份，数据库密码需只对研究负责人及服务端可见。
+Supabase 使用独立 `survey` schema，启用 RLS、不添加匿名策略，不将该 schema 加入 Data API 的 Exposed schemas。迁移脚本不删表；正式版本更新应新增迁移，建表脚本可以安全重跑补齐缺失表，但不能代替后续版本的结构迁移。当前连接使用项目数据库身份，数据库密码需只对研究负责人及服务端可见。
 
 ### 视频配置
 
