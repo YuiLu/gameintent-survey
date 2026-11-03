@@ -1,5 +1,5 @@
-import { studyApi as api } from "../lib/study/client";
 "use client";
+import { studyApi as api } from "../lib/study/client";
 import {
   useEffect,
   useRef,
