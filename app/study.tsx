@@ -453,7 +453,6 @@ export function Evaluation({
     [seconds, setSeconds] = useState(0),
     [locking, setLocking] = useState(false),
     [error, setError] = useState("");
-  const [search, setSearch] = useState("");
   const q = revealed || question,
     locked = !!revealed;
   useEffect(() => {
@@ -593,30 +592,8 @@ export function Evaluation({
               />
             ) : (
               <>
-                <input
-                  aria-label={t("搜索标签", "Search labels")}
-                  placeholder={t(
-                    "搜索中英文标签",
-                    "Search English or Chinese labels",
-                  )}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
                 <div className="options blind-options">
                   {(q.label_choices || [])
-                    .filter((l: Any) =>
-                      (
-                        l.en +
-                        " " +
-                        l.zh +
-                        " " +
-                        l.definition_en +
-                        " " +
-                        l.definition_zh
-                      )
-                        .toLowerCase()
-                        .includes(search.toLowerCase()),
-                    )
                     .map((l: Any) => (
                       <label
                         className={
