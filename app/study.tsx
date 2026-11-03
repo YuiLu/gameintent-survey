@@ -642,15 +642,11 @@ export function Entry({
 }) {
   const { t, language } = useLanguage(),
     [page, setPage] = useState(0),
-    [game, setGame] = useState(""),
+    [games, setGames] = useState<string[]>([]),
     [familiarity, setFamiliarity] = useState(3),
     [experience, setExperience] = useState<string[]>([]),
     [consent, setConsent] = useState(false);
-  const open = ["live", "pilot"].includes(config?.status),
-    main = config?.config?.mainPerParticipant ||
-      (config?.config?.participantsPerGame
-        ? config.config.clipsPerGame * config.config.ratersPerClip / config.config.participantsPerGame
-        : 10);
+  const open = ["live", "pilot"].includes(config?.status);
   if (page === 0)
     return (
       <main className="welcome">
@@ -672,8 +668,8 @@ export function Entry({
             </p>
             <div className="hero-facts">
               <div>
-                <strong>{main}</strong>
-                <small>{t("道正式视频题", "main video questions")}</small>
+                <strong>{t("自选", "Your choice")}</strong>
+                <small>{t("熟悉的游戏", "familiar games")}</small>
               </div>
               <div>
                 <strong>2</strong>
@@ -700,7 +696,7 @@ export function Entry({
             <div className="intro-steps">
               {[
                 [
-                  t("选择你熟悉的游戏", "Choose a familiar game"),
+                  t("选择你熟悉的游戏", "Choose familiar games"),
                   t(
                     "不需要账号或实名。",
                     "No account or real name is required.",
@@ -716,8 +712,8 @@ export function Entry({
                 [
                   t("逐页完成评价", "Review one page at a time"),
                   t(
-                    "每段分别判断标签和描述，另有3道检查或重复题。",
-                    "Judge labels and descriptions separately. Three control or repeat clips are also included.",
+                    "每段分别判断标签和描述，可随时暂停。",
+                    "Review labels and descriptions separately. You can pause at any time.",
                   ),
                 ],
               ].map(([title, detail], i) => (
@@ -745,7 +741,7 @@ export function Entry({
       <Steps active={1} />
       <section className="enrollment paged-enrollment">
         <div className="section-heading">
-          <h1>{t("选择你熟悉的游戏", "Choose a game you know")}</h1>
+          <h1>{t("选择你熟悉的游戏（可多选）", "Choose the games you know (select all that apply)")}</h1>
           <button className="text-button" onClick={() => setPage(0)}>
             <ArrowLeft size={15} />
             {t("上一页", "Back")}
@@ -755,9 +751,9 @@ export function Entry({
           {(config?.games || GAMES).map((g: Any) => (
             <button
               key={g.id}
-              aria-pressed={game === g.id}
-              className={"game-card " + (game === g.id ? "chosen" : "")}
-              onClick={() => setGame(g.id)}
+              aria-pressed={games.includes(g.id)}
+              className={"game-card " + (games.includes(g.id) ? "chosen" : "")}
+              onClick={() => setGames(values => values.includes(g.id) ? values.filter(v => v !== g.id) : [...values, g.id])}
             >
               <span
                 className="game-monogram"
@@ -770,17 +766,17 @@ export function Entry({
                 <small>{language === "zh" ? g.en : g.zh}</small>
               </div>
               <span className="game-genre">{g.genre}</span>
-              {game === g.id && <CheckCircle2 size={17} />}
+              {games.includes(g.id) && <CheckCircle2 size={17} />}
             </button>
           ))}
         </div>
-        {game && (
+        {games.length > 0 && (
           <div className="profile-grid">
             <label>
               <span className="field-label">
                 {t(
-                  "你对这款游戏有多熟悉？",
-                  "How familiar are you with this game?",
+                  "你对所选游戏有多熟悉？",
+                  "How familiar are you with the selected games?",
                 )}
               </span>
               <select
@@ -890,10 +886,10 @@ export function Entry({
             )}
           </p>
           <Button
-            disabled={!open || !game || !consent || !experience.length || busy}
+            disabled={!open || !games.length || !consent || !experience.length || busy}
             onClick={() =>
               onStart({
-                game,
+                games,
                 familiarity,
                 experience,
                 consent,
@@ -1176,6 +1172,18 @@ export function ParticipantStudy() {
       setBusy(false);
     }
   }
+  async function finish() {
+    setBusy(true); setError("");
+    try { await api("finish", {}); await refresh(); }
+    catch (e) { setError((e as Error).message); }
+    finally { setBusy(false); }
+  }
+  async function more() {
+    setBusy(true); setError("");
+    try { const result = await api("more", {}); if (!result.added) setError(t("所选游戏暂时没有更多待评价样本。", "There are no more available clips in your selected games.")); await refresh(); }
+    catch (e) { setError((e as Error).message); }
+    finally { setBusy(false); }
+  }
   async function withdraw() {
     if (
       !confirm(
@@ -1264,6 +1272,7 @@ export function ParticipantStudy() {
             "Your responses and drafts save automatically. Close this page and return in the same browser to continue.",
           )}
         </p>
+        {state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}
         <Button onClick={() => setPaused(false)}>
           <Play size={16} />
           {t("继续评价", "Continue reviewing")}
@@ -1291,8 +1300,7 @@ export function ParticipantStudy() {
         <Steps active={3} />
         <div className="session-strip">
           <span>
-            {state.progress.done + 1} / {state.progress.total}{" "}
-            {t("段视频", "clips")}
+            {t("已完成", "Reviewed")} {state.progress.done} {t("段视频", "clips")}
           </span>
           <span className="save-status" role="status">
             {saved === "saving"
@@ -1304,6 +1312,7 @@ export function ParticipantStudy() {
                   )
                 : t("进度自动保存", "Progress saved automatically")}
           </span>
+          {state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}
           <button onClick={() => setPaused(true)}>
             <Pause size={14} />
             {t("暂停", "Pause")}
@@ -1327,7 +1336,9 @@ export function ParticipantStudy() {
         />
       </div>
     );
-  } else
+  } else if (state.progress.batch_done && state.participant.profile.flexible)
+    content = (<div className="center-card"><h1>{t("回答已保存", "Your responses are saved")}</h1><Button disabled={busy} onClick={more}>{t("继续评价", "Review more clips")}</Button>{state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}</div>);
+  else
     content = (
       <div className="center-card">
         <p>{t("正在同步题目…", "Syncing the next question…")}</p>

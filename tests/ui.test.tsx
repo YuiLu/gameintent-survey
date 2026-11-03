@@ -8,7 +8,7 @@ const render=(language:'en'|'zh',child:React.ReactNode)=>renderToStaticMarkup(<L
 test('English and Chinese participant screens have real localized interface copy',()=>{
  const en=render('en',<Entry config={{status:'draft',config:{mainPerParticipant:10}}} onStart={()=>{}} busy={false} error=""/>);
  const zh=render('zh',<Entry config={{status:'draft',config:{mainPerParticipant:10}}} onStart={()=>{}} busy={false} error=""/>);
- assert.match(en,/Enter the study/);assert.match(en,/main video questions/);assert.match(en,/>10</);
+ assert.match(en,/Enter the study/);assert.match(en,/familiar games/);assert.doesNotMatch(en,/>10<|10 main|minimum/);
  assert.match(zh,/进入问卷/);assert.doesNotMatch(en,/续答码|resume code|先看一个示例/);
 });
 test('label and description judgments are paged while both annotation languages remain visible',()=>{

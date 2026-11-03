@@ -875,6 +875,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
                   <small>
                     α 无定义时留空。检查题、练习题和重复题不进入核心质量指标。
                   </small>
+                  <div className="table-scroll"><table><thead><tr><th>游戏</th><th>标签 Fleiss κ</th><th>描述 Fleiss κ</th></tr></thead><tbody>{GAMES.map(g => <tr key={g.id}><td>{g.en}</td><td>{result.games[g.id]?.agreement.label.fleiss_kappa?.toFixed(3) ?? "—"}</td><td>{result.games[g.id]?.agreement.description.fleiss_kappa?.toFixed(3) ?? "—"}</td></tr>)}</tbody></table></div>
                   <details>
                     <summary>快照与复现信息</summary>
                     <pre>

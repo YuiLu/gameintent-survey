@@ -1,4 +1,4 @@
-export const VERSION = '2.1';
+export const VERSION = '2.2';
 export const STUDY_ID = 'game-intention-v2';
 export const GAMES = [
  {id:'aoe2',en:'Age of Empires II',zh:'帝国时代 II',genre:'RTS',size:18826,color:'#b99761'},
