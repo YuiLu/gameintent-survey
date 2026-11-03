@@ -166,6 +166,7 @@ python3 scripts/upload-cos.py --bucket YOUR_BUCKET --region YOUR_REGION
 |---|---|
 | `relation already exists` | 使用本仓库可重复执行的 schema；已有项目不用重复建库 |
 | 页面可开，API 503 | ESA 三项变量、Supabase 变量，以及保存后是否重建发布 |
+| HTTP 页面能显示，但提示“请求格式无效” | 公开页面和 API 必须走 HTTPS；当前入口自动升级协议，发布时需同时更新 ESA 页面和函数 |
 | ESA 变量超过 200 字符 | 用短 `sb_publishable_` 项目密钥，不填长 anon JWT |
 | 函数直接访问 401 | 私密 HMAC 网关拒绝是预期；通过问卷 `/api/*` 验收 |
 | 云端 `NotSupported: setEnv` | Supabase 环境变量只读；更新到当前代码，不在运行中赋值 `process.env` |

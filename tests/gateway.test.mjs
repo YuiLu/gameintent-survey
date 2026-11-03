@@ -84,3 +84,15 @@ test('media relay rejects untrusted targets, retries transient failures, and pre
   });
   assert.equal(other.headers.get(MEDIA_URL_HEADER),null);
 });
+
+test('public HTTP API requests upgrade to HTTPS before forwarding any body or credentials',async()=>{
+  const {secureStudyUrl}=await import('../lib/study/secure-url.mjs');
+  const input='http://survey.example/?view=admin&from=wechat#section';
+  assert.equal(secureStudyUrl(input),'https://survey.example/?view=admin&from=wechat#section');
+  for(const url of ['https://survey.example/','http://localhost:5180/','http://127.0.0.1:5180/','http://[::1]:5180/'])assert.equal(secureStudyUrl(url),null);
+  for(const method of ['GET','POST']){
+    const request=new Request('http://survey.example/api/enroll?from=wechat',{method,headers:{Cookie:'gi_participant=fixture',Origin:'http://survey.example'},...method==='POST'?{body:'{"consent":false}'}:{}});
+    const r=await proxyStudyApi(request,env,()=>{throw Error('HTTP must not reach Supabase');});
+    assert.equal(r.status,308);assert.equal(r.headers.get('location'),'https://survey.example/api/enroll?from=wechat');
+  }
+});
