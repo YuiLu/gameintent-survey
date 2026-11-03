@@ -174,6 +174,12 @@
 .paged-enrollment{border-top:0;padding-top:28px}.bilingual-copy p{margin:8px 0;line-height:1.8;overflow-wrap:anywhere}.bilingual-copy .secondary-copy{color:var(--muted);font-size:.92em}.judgment-pages{display:flex;gap:8px;margin-bottom:16px}.judgment-pages button{flex:1;text-align:left;padding:12px 14px;background:#eef1eb;border-radius:8px;color:var(--muted)}.judgment-pages button[aria-current=page]{background:var(--green);color:#fff}.judgments>.submit-row{flex-wrap:wrap;gap:16px}.judgments>.submit-row .actions{margin-left:auto}.center-card>.text-button{display:block;margin:20px auto 0}.center-card .study-steps{justify-content:center;margin-bottom:22px}.hero-copy h1{max-width:650px}.question-card .option small:empty{display:none}
 @media(max-width:700px){.header-right{gap:10px}.language{gap:2px}.language button{min-height:42px;font-size:12px;padding:7px}.header-right>.text-button{font-size:11px}.header-rule{display:none}.study-steps{gap:10px;font-size:11px;padding-top:20px}.study-steps>span{gap:5px}.study-steps i{width:22px;height:22px}.judgment-pages button{font-size:14px}.judgments>.submit-row .actions{width:100%;margin:0}.judgments>.submit-row .actions>.button{flex:1}.bilingual-copy .secondary-copy{font-size:13px}.hero{gap:24px;padding-top:32px}.hero-copy>.button{width:100%}}
 
-.blind-options{max-height:480px;overflow-y:auto;overscroll-behavior:contain;padding-right:6px}.blind-options input[type=checkbox]{flex-shrink:0;margin-top:5px}.blind-options .option{align-items:flex-start}
+/* Keep each bilingual choice at its natural height inside the scroll container. */
+.blind-options{max-height:480px;overflow-y:auto;overscroll-behavior:contain;padding:8px 6px 8px 0;margin-top:8px;scroll-padding-block:8px}
+.blind-options .option{flex:0 0 auto;display:grid;grid-template-columns:18px minmax(0,1fr);align-items:start}
+.blind-option-copy{min-width:0;overflow-wrap:anywhere}
+.blind-option-copy .bilingual-copy p{margin:6px 0 0;line-height:1.7}
+.checkbox-indicator{width:18px;height:18px;border:1px solid #aab9a2;border-radius:4px;display:grid;place-items:center;margin-top:3px;color:#fff}
+.option.selected .checkbox-indicator{background:var(--green);border-color:var(--green)}
 
 .video-loading{display:flex;align-items:center;gap:9px;padding:10px 14px;background:var(--light);color:var(--green);font-size:12px}.video-loading>svg{flex-shrink:0}.video-loading>button{margin-left:auto;text-decoration:underline;min-height:32px;white-space:nowrap}

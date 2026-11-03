@@ -641,12 +641,17 @@ export function Evaluation({
                             );
                           }}
                         />
-                        <span>
+                        <span className="checkbox-indicator" aria-hidden="true">
+                          {status === "selected" && selected.includes(l.id) && (
+                            <Check size={12} />
+                          )}
+                        </span>
+                        <div className="blind-option-copy">
                           <strong>
                             {l.en} · {l.zh}
                           </strong>
                           <Pair zh={l.definition_zh} en={l.definition_en} />
-                        </span>
+                        </div>
                       </label>
                     ))}
                 </div>
