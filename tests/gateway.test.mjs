@@ -44,3 +44,43 @@ test('ESA short publishable key uses apikey and retains the signed gateway check
   });
   assert.equal(response.status,200);assert.deepEqual(await response.json(),{ok:true});
 });
+
+test('authorized media streams COS bytes at ESA and never forwards browser credentials or the ticket', async () => {
+  const {MEDIA_URL_HEADER,MEDIA_RELAY_HEADER} = await import('../lib/study/media-relay.mjs');
+  const target='https://study-1250000000.cos.ap-shanghai.myqcloud.com/study-v2/videos/test_clip.mp4?q-sign-algorithm=sha1&q-signature=fixture';
+  let authCalls=0,mediaCalls=0;
+  const r=await proxyStudyApi(new Request('https://survey.example/api/media/test_clip',{headers:{Cookie:'gi_participant=private',Range:'bytes=0-3',[MEDIA_RELAY_HEADER]:'forged'}}),env,async(url,init)=>{
+    if(url===env.STUDY_API_URL){
+      authCalls++;
+      return receiveStudyApi(new Request(url,init),env.STUDY_GATEWAY_KEY,async original=>{
+        assert.equal(original.headers.get(MEDIA_RELAY_HEADER),'esa');
+        assert.equal(original.headers.get('cookie'),'gi_participant=private');
+        return new Response(null,{status:204,headers:{[MEDIA_URL_HEADER]:target}});
+      });
+    }
+    mediaCalls++;assert.equal(url,target);assert.deepEqual(init.headers,{Range:'bytes=0-3'});assert.equal(init.redirect,'error');
+    return new Response(new Uint8Array([0,1,2,3]),{status:206,headers:{'Content-Range':'bytes 0-3/10','Content-Length':'4','Accept-Ranges':'bytes'}});
+  });
+  assert.equal(authCalls,1);assert.equal(mediaCalls,1);assert.equal(r.status,206);
+  assert.equal(r.headers.get('content-range'),'bytes 0-3/10');assert.equal(r.headers.get(MEDIA_URL_HEADER),null);
+  assert.equal(r.headers.get('cache-control'),'private, max-age=300');assert.equal(r.headers.get('vary'),'Cookie, Authorization');
+  assert.deepEqual([...new Uint8Array(await r.arrayBuffer())],[0,1,2,3]);
+});
+
+test('media relay rejects untrusted targets, retries transient failures, and preserves unsatisfiable ranges',async()=>{
+  const {relayCosMedia,MEDIA_URL_HEADER}=await import('../lib/study/media-relay.mjs');
+  const request=new Request('https://survey.example/api/media/test_clip',{headers:{Range:'bytes=999-'}});
+  const target='https://study-1250000000.cos.ap-shanghai.myqcloud.com/study-v2/videos/test_clip.mp4?q-sign-algorithm=sha1&q-signature=fixture';
+  for(const bad of ['https://evil.example/file',target.replace('test_clip.mp4','another.mp4'),target.replace('https:','http:')]){
+    assert.equal((await relayCosMedia(request,bad,()=>{throw Error('must not fetch')})).status,502);
+  }
+  let calls=0;
+  const partial=await relayCosMedia(request,target,async()=>++calls===1?new Response(null,{status:503}):new Response(null,{status:416,headers:{'Content-Range':'bytes */10'}}));
+  assert.equal(calls,2);assert.equal(partial.status,416);assert.equal(partial.headers.get('content-range'),'bytes */10');assert.equal(partial.headers.get('cache-control'),'no-store');
+  const denied=await proxyStudyApi(request,env,async()=>Response.json({error:'denied'},{status:403}));assert.equal(denied.status,403);
+  const other=await proxyStudyApi(new Request(publicUrl,{headers:{'x-study-media-relay':'esa'}}),env,async(url,init)=>{
+    assert.equal(JSON.parse(init.body).headers['x-study-media-relay'],undefined);
+    return new Response(null,{status:204,headers:{[MEDIA_URL_HEADER]:target}});
+  });
+  assert.equal(other.headers.get(MEDIA_URL_HEADER),null);
+});

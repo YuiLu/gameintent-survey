@@ -233,7 +233,7 @@ function Options({
     </div>
   );
 }
-function Player({
+export function Player({
   src,
   onLoaded,
   onTime,
@@ -242,17 +242,127 @@ function Player({
   onLoaded: (v: boolean) => void;
   onTime: (v: number) => void;
 }) {
-  const { t } = useLanguage(),
-    ref = useRef<HTMLVideoElement>(null),
-    last = useRef(0),
-    watched = useRef(0),
-    [failed, setFailed] = useState(false);
+  const { t } = useLanguage();
+  const ref = useRef<HTMLVideoElement>(null);
+  const callbacks = useRef({ onLoaded, onTime });
+  callbacks.current = { onLoaded, onTime };
+  const manualRetry = useRef(() => {});
+  const [state, setState] = useState<
+    "loading" | "ready" | "retrying" | "failed"
+  >("loading");
   useEffect(() => {
-    last.current = 0;
-    watched.current = 0;
-    setFailed(false);
-    onLoaded(false);
-    onTime(0);
+    const video = ref.current;
+    if (!video) return;
+    let attempts = 0,
+      watched = 0,
+      last = 0,
+      resumeAt = 0;
+    let wantsPlay = false,
+      restarting = false,
+      disposed = false;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let watchdog: ReturnType<typeof setTimeout> | undefined;
+    const clear = () => {
+      clearTimeout(retryTimer);
+      clearTimeout(watchdog);
+    };
+    const arm = () => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => retry(false), 20000);
+    };
+    const retry = (manual: boolean) => {
+      if (disposed || restarting) return;
+      clear();
+      callbacks.current.onLoaded(false);
+      resumeAt = Math.max(resumeAt, video.currentTime || 0);
+      if (!manual && attempts >= 2) {
+        setState("failed");
+        return;
+      }
+      if (manual) attempts = 0;
+      restarting = true;
+      setState("retrying");
+      retryTimer = setTimeout(
+        () => {
+          if (disposed) return;
+          attempts++;
+          const url = new URL(src, window.location.href);
+          url.searchParams.set("_retry", String(Date.now()));
+          video.src = url.href;
+          video.load();
+          restarting = false;
+          arm();
+        },
+        manual ? 0 : attempts === 0 ? 600 : 1800,
+      );
+    };
+    const ready = () => {
+      clearTimeout(watchdog);
+      setState("ready");
+      callbacks.current.onLoaded(true);
+      if (resumeAt > 0) {
+        video.currentTime = Math.min(
+          resumeAt,
+          Math.max(0, video.duration - 0.1),
+        );
+        last = video.currentTime;
+        resumeAt = 0;
+      }
+      if (wantsPlay && video.paused) void video.play().catch(() => {});
+    };
+    const play = () => {
+      wantsPlay = true;
+    };
+    const playing = () => {
+      clearTimeout(watchdog);
+      setState("ready");
+    };
+    const pause = () => {
+      if (!restarting && !video.error) wantsPlay = false;
+    };
+    const waiting = () => {
+      if (video.ended || (video.paused && video.readyState >= 2)) return;
+      setState("loading");
+      arm();
+    };
+    const progress = () => {
+      if (video.readyState < 2 || (!video.paused && video.readyState < 3))
+        arm();
+    };
+    const error = () => retry(false);
+    const time = () => {
+      const delta = video.currentTime - last;
+      if (delta > 0 && delta < 2.5) watched += delta;
+      last = video.currentTime;
+      callbacks.current.onTime(watched);
+    };
+    const events = {
+      loadeddata: ready,
+      canplay: ready,
+      play,
+      playing,
+      pause,
+      waiting,
+      stalled: waiting,
+      progress,
+      error,
+      timeupdate: time,
+    };
+    for (const [event, handler] of Object.entries(events))
+      video.addEventListener(event, handler);
+    manualRetry.current = () => retry(true);
+    callbacks.current.onLoaded(false);
+    callbacks.current.onTime(0);
+    setState("loading");
+    // Check cached data in case the element loaded before this effect attached.
+    if (video.readyState >= 2) ready();
+    else arm();
+    return () => {
+      disposed = true;
+      clear();
+      for (const [event, handler] of Object.entries(events))
+        video.removeEventListener(event, handler);
+    };
   }, [src]);
   return (
     <div className="player-shell">
@@ -262,22 +372,10 @@ function Player({
         controls
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         controlsList="nodownload"
         onVolumeChange={(e) => {
           e.currentTarget.muted = true;
-        }}
-        onLoadedData={() => onLoaded(true)}
-        onError={() => {
-          setFailed(true);
-          onLoaded(false);
-        }}
-        onTimeUpdate={(e) => {
-          const time = e.currentTarget.currentTime,
-            d = time - last.current;
-          if (d > 0 && d < 2.5) watched.current += d;
-          last.current = time;
-          onTime(watched.current);
         }}
       />
       <div className="video-meta">
@@ -288,17 +386,32 @@ function Player({
           )}
         </span>
       </div>
-      {failed && (
-        <div className="video-error">
+      {(state === "loading" || state === "retrying") && (
+        <div className="video-loading" role="status">
+          <Loader2 className="spin" size={16} />
+          <span>
+            {state === "retrying"
+              ? t(
+                  "连接中断，正在重新加载…",
+                  "Connection interrupted. Retrying…",
+                )
+              : t("正在加载视频…", "Loading video…")}
+          </span>
+          <button type="button" onClick={() => manualRetry.current()}>
+            {t("重新加载", "Reload")}
+          </button>
+        </div>
+      )}
+      {state === "failed" && (
+        <div className="video-error" role="alert">
           <Video />
-          <p>{t("视频暂时无法加载", "The video could not be loaded")}</p>
-          <Button
-            secondary
-            onClick={() => {
-              setFailed(false);
-              ref.current?.load();
-            }}
-          >
+          <p>
+            {t(
+              "视频暂时无法加载，答题进度已保留",
+              "The video could not be loaded. Your answers are saved.",
+            )}
+          </p>
+          <Button secondary onClick={() => manualRetry.current()}>
             {t("重新加载", "Reload video")}
           </Button>
         </div>
@@ -306,6 +419,7 @@ function Player({
     </div>
   );
 }
+
 export function Evaluation({
   question,
   draft,

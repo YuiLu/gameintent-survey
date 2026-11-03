@@ -175,3 +175,5 @@
 @media(max-width:700px){.header-right{gap:10px}.language{gap:2px}.language button{min-height:42px;font-size:12px;padding:7px}.header-right>.text-button{font-size:11px}.header-rule{display:none}.study-steps{gap:10px;font-size:11px;padding-top:20px}.study-steps>span{gap:5px}.study-steps i{width:22px;height:22px}.judgment-pages button{font-size:14px}.judgments>.submit-row .actions{width:100%;margin:0}.judgments>.submit-row .actions>.button{flex:1}.bilingual-copy .secondary-copy{font-size:13px}.hero{gap:24px;padding-top:32px}.hero-copy>.button{width:100%}}
 
 .blind-options{max-height:480px;overflow-y:auto;overscroll-behavior:contain;padding-right:6px}.blind-options input[type=checkbox]{flex-shrink:0;margin-top:5px}.blind-options .option{align-items:flex-start}
+
+.video-loading{display:flex;align-items:center;gap:9px;padding:10px 14px;background:var(--light);color:var(--green);font-size:12px}.video-loading>svg{flex-shrink:0}.video-loading>button{margin-left:auto;text-decoration:underline;min-height:32px;white-space:nowrap}

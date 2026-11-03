@@ -18,3 +18,9 @@ test('blind stage hides the annotation even if a draft requests the second page'
  const after=render('en',<Evaluation question={{...blind,blind_locked:true,blind_response:{labels:['defend'],status:'selected'}}} onSubmit={()=>{}}/>);
  assert.match(after,/Hold the tower/);assert.match(after,/守住防御塔/);assert.match(after,/name="description"/);assert.doesNotMatch(after,/type="checkbox"/);
 });
+
+test('video buffers the current clip and exposes an accessible loading indicator',async()=>{
+ const {Player}=await import('../app/study');
+ const html=render('en',<Player src="/api/media/test_clip" onLoaded={()=>{}} onTime={()=>{}}/>);
+ assert.match(html,/preload="auto"/);assert.match(html,/role="status"/);assert.match(html,/Loading video/);assert.match(html,/Reload/);
+});
