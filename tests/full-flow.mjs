@@ -40,4 +40,8 @@ const finalExport=(await call('admin/export',undefined,ADMIN)).data;assert.equal
 const stop=await call('enroll',{games:['apex','overwatch'],familiarity:3,experience:['watch'],consent:true});const sh={Cookie:stop.cookie};let ss=(await call('me',undefined,sh)).data;for(const pr of ss.practice)await call('practice',{question_id:pr.question.id,label_support:'supported',description_support:'fully_supported'},sh);await call('qualify',{choice:'insufficient'},sh);
 for(let i=0;i<10;i++){ss=(await call('me',undefined,sh)).data;await call('submit',{assignment_id:ss.assignment.id,label_support:'supported',description_support:'fully_supported',video_loaded:true,playback_seconds:5},sh);}
 assert.equal((await call('finish',{},sh)).status,200);ss=(await call('me',undefined,sh)).data;assert.equal(ss.progress.done,10);assert.equal(ss.progress.main_done,7);assert.equal(ss.participant.status,'completed');
+assert.equal((await call('admin/status',{status:'pilot'},ADMIN)).status,200,'Pilot is an explicit separate study phase');
+assert.equal((await call('config')).data.status,'pilot');
+assert.equal((await call('admin/status',{status:'live'},ADMIN)).status,409,'Existing pilot participants must be cleared before formal release');
+assert.equal((await call('maintenance/media-ticket',{question_id:'TEST_cs_0',md5:'fixture'})).status,401,'Public callers cannot obtain upload tickets');
 console.log('PASS: 374 synthetic questions; 165 balanced panels; 16 concurrent candidates / 15 slots; practice, consent, qualification, draft, idempotency, locked answers, cross-participant protection, automatic same-browser recovery, 5 complete reviewers, formal-only statistics, safe export, exclusion, refill and withdrawal. Synthetic records exist only in the isolated in-memory database.');

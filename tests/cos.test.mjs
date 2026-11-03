@@ -25,3 +25,15 @@ test('GET signature matches independent Node HMAC calculation; HEAD is distinct'
   await assert.rejects(signedCosUrl(config,'../elsewhere.mp4'));
   await assert.rejects(signedCosUrl(config,key,'PUT'));
 });
+test('upload ticket restricts the object and signs both MD5 and frozen SHA-256',async()=>{
+ const {signedCosUpload}=await import('../lib/study/cos.mjs');const {mediaMaintenanceAllowed,maintenanceToken}=await import('../lib/study/media-maintenance.mjs');
+ const md5=createHash('md5').update('test').digest('base64'),sha=createHash('sha256').update('test').digest('hex');
+ const ticket=await signedCosUpload(cosConfig(env),'clip_test',sha,md5,1800000000),url=new URL(ticket.url),period='1799999940;1800000600';
+ assert.equal(url.pathname,'/study-v2/videos/clip_test.mp4');assert.equal(url.searchParams.get('q-header-list'),'content-md5;host;x-cos-meta-sha256');
+ const enc=v=>encodeURIComponent(v).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+ const canonical=`put\n${url.pathname}\n\ncontent-md5=${enc(md5)}&host=${enc(url.host)}&x-cos-meta-sha256=${sha}\n`;
+ const sk=createHmac('sha1',env.COS_SECRET_KEY).update(period).digest('hex'),expected=createHmac('sha1',sk).update(`sha1\n${period}\n${createHash('sha1').update(canonical).digest('hex')}\n`).digest('hex');assert.equal(url.searchParams.get('q-signature'),expected);
+ await assert.rejects(signedCosUpload(cosConfig(env),'../evil',sha,md5));
+ const setupEnv={STUDY_GATEWAY_KEY:'a'.repeat(64),STUDY_MEDIA_SETUP:'1'},token=await maintenanceToken(setupEnv.STUDY_GATEWAY_KEY),req=new Request('https://study.example',{headers:{Authorization:'Bearer '+token}});
+ assert.equal(await mediaMaintenanceAllowed(req,setupEnv),true);assert.equal(await mediaMaintenanceAllowed(req,{...setupEnv,STUDY_MEDIA_SETUP:'0'}),false);assert.equal(await mediaMaintenanceAllowed(new Request('https://study.example'),setupEnv),false);
+});

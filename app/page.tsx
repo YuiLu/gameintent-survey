@@ -1,3 +1,4 @@
+import { studyApi as api } from "../lib/study/client";
 "use client";
 import {
   useEffect,
@@ -44,17 +45,7 @@ import {
 } from "@/lib/study/constants";
 import { LanguageProvider, ParticipantStudy, useLanguage } from "./study";
 type Any = any;
-async function api(path: string, data?: Any) {
-  const r = await fetch("/api/" + path, {
-    method: data === undefined ? "GET" : "POST",
-    headers: data === undefined ? {} : { "Content-Type": "application/json" },
-    body: data === undefined ? undefined : JSON.stringify(data),
-    credentials: "same-origin",
-  });
-  const v: Any = await r.json();
-  if (!r.ok) throw Error(v.error || "请求失败，请重试");
-  return v;
-}
+
 const pct = (n: Any) =>
   n === null || n === undefined ? "—" : (n * 100).toFixed(1) + "%";
 function Mark() {
@@ -185,7 +176,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
     if (d.last_analysis) setResult(d.last_analysis.result);
   }, []);
   useEffect(() => {
-    load().catch(() => {});
+    load().catch((e) => { if (!/请登录/.test(e.message)) setError(e.message); });
   }, [load]);
   async function action(f: () => Promise<void>) {
     setBusy(true);
@@ -369,6 +360,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
                 >
                   生成平衡分配
                 </Button>
+                <Button secondary disabled={busy || !data.pilot_readiness?.ready} onClick={() => action(async () => { await api("admin/status", {status:"pilot"}); setMessage("线上测试已开放，试填回答不进入正式分析。"); })}>开放线上测试</Button>
                 <Button
                   secondary
                   disabled={busy || !data.readiness.ready}

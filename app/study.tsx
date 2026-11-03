@@ -1,3 +1,4 @@
+import { studyApi as api } from "../lib/study/client";
 "use client";
 import {
   createContext,
@@ -70,17 +71,7 @@ export function LanguageProvider({
   );
 }
 export const useLanguage = () => useContext(Locale);
-async function api(path: string, data?: Any) {
-  const r = await fetch("/api/" + path, {
-    method: data === undefined ? "GET" : "POST",
-    headers: data === undefined ? {} : { "Content-Type": "application/json" },
-    body: data === undefined ? undefined : JSON.stringify(data),
-    credentials: "same-origin",
-  });
-  const v = await r.json();
-  if (!r.ok) throw Error(v.error || "请求失败，请重试");
-  return v;
-}
+
 function errorText(message: string, language: Language) {
   if (language === "zh") return message;
   const known: Record<string, string> = {
@@ -932,6 +923,7 @@ function Training({
           )}
         </p>
         <div className="feedback">
+          {!feedback.label_support && <p>{t("测试示例尚未制定人工参考答案；你的选择已保存。", "This pilot example has no manually verified reference answer yet. Your judgments are saved.")}</p>}
           <p>
             {t("标签：", "Labels: ")}
             {
@@ -1349,6 +1341,7 @@ export function ParticipantStudy() {
     );
   return (
     <>
+      {(config?.status === "pilot" || state?.study?.status === "pilot") && <div className="global-error"><Notice>{t("测试问卷 · 本轮为研究人员试填，回答不进入正式研究结果。", "Pilot study · Researcher testing only. These responses are excluded from the research results.")}</Notice></div>}
       {state && error && (
         <div className="global-error">
           <Notice error>{errorText(error, language)}</Notice>

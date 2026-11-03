@@ -1,0 +1,8 @@
+{
+  "version": "2.0",
+  "statement": [{
+    "effect": "allow",
+    "action": ["name/cos:GetObject", "name/cos:HeadObject", "name/cos:PutObject"],
+    "resource": ["qcs::cos:ap-shanghai:uid/1321360347:gameintent-survey-1321360347/study-v2/videos/*"]
+  }]
+}

@@ -174,3 +174,17 @@ python3 scripts/upload-cos.py --bucket YOUR_BUCKET --region YOUR_REGION
 | HTTPS 域名不匹配 | 证书必须覆盖完整问卷子域名，根域证书不自动覆盖子域 |
 | CNAME 待配置 | 检查权威 DNS 中的前缀、平台返回目标及同名冲突 |
 | 某日集中返回 503 | 检查账号函数日请求限额以及数据库是否暂停 |
+
+## 线上试填与视频首次上传
+
+购买 COS 不会自动产生 API 密钥。在腾讯云 CAM → 用户 → 用户列表创建专用子用户，在该用户的 API 密钥页创建密钥。SecretKey 只在创建时显示一次。将两项填入 Supabase Secrets；不要填入 ESA 或前端。子用户可绑定 [上传策略](cos-upload-policy.json)，只允许本桶视频前缀的读取、HEAD 检查和上传，不含删除。
+
+候选题还没有人工参考答案时，可开放 `pilot` 试填，页面明确显示测试；缺少视频或双语文本仍会阻止开放。试填允许先检查界面和回收，不将候选检查题伪装为已人工审核。正式 `live` 仍需补齐原有复核与配置要求，已有试填数据也会阻止直接切入正式收集。
+
+- Supabase 另外配置非敏感项：`COS_BUCKET=gameintent-survey-1321360347`、`COS_REGION=ap-shanghai`、`COS_MEDIA_ORIGIN=https://gameintent-media.magic-lab.tech`。
+- 视频域名还没配好时，可暂设 `COS_PROXY_PLAYBACK=1`。视频经已鉴权问卷接口流式转发，保留 Range/206，不需要公开视频桶；视频流量也会经过 Supabase/ESA，正式收集前应配置视频域名并关闭转发。
+- 首次上传临时启用 `STUDY_MEDIA_SETUP=1`。维护请求除了 ESA 转发签名，还要求独立用途的 HMAC 派生令牌。浏览器持有发布密钥不能获得上传凭证。
+- 在已保存私有网关配置的工作目录运行 `node scripts/upload-cos-gateway.mjs`。脚本从冻结清单指定的服务器文件读取，核对原文件 SHA-256，使用十分钟有效且绑定 MD5/SHA-256 的 PUT 地址上传，再回读核对 SHA-256，最后登记入库。支持已登记对象断点续传，输出不含密钥或签名地址。
+- 上传完成后再通过维护或管理员入口开放 `pilot`，确认真实视频、草稿、提交和统计链路。最后将 `STUDY_MEDIA_SETUP=0`，关闭上传维护入口。
+
+`127.0.0.1:8040` 的旧只读布局预览不是在线问卷，不应作为试填入口。线上使用已部署证书的问卷域名；证书待配置时可使用 ESA 控制台「访问」生成的限时测试链接。
