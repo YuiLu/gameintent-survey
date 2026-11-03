@@ -183,3 +183,5 @@
 .option.selected .checkbox-indicator{background:var(--green);border-color:var(--green)}
 
 .video-loading{display:flex;align-items:center;gap:9px;padding:10px 14px;background:var(--light);color:var(--green);font-size:12px}.video-loading>svg{flex-shrink:0}.video-loading>button{margin-left:auto;text-decoration:underline;min-height:32px;white-space:nowrap}
+
+.four-choice-options{max-height:none;overflow:visible;padding-right:0}.choice-label+.choice-label{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.four-choice-options .radio-indicator{margin-top:4px}

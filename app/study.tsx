@@ -453,11 +453,18 @@ export function Evaluation({
     [seconds, setSeconds] = useState(0),
     [locking, setLocking] = useState(false),
     [error, setError] = useState("");
+  const [choiceId, setChoiceId] = useState(
+    question.blind_response?.choice_id || draft?.blind_choice_id || "",
+  );
+  const fourChoice = question.choice_mode === "blind-four-v1";
   const q = revealed || question,
     locked = !!revealed;
   useEffect(() => {
     const answer = {
       blind_labels: selected,
+      ...(fourChoice
+        ? { choice_mode: "blind-four-v1", blind_choice_id: choiceId }
+        : {}),
       blind_status: status,
       description_support: description,
       comment,
@@ -465,7 +472,7 @@ export function Evaluation({
     if (draftKey) localStorage.setItem(draftKey, JSON.stringify(answer));
     const timer = setTimeout(() => onDraft?.(answer), 600);
     return () => clearTimeout(timer);
-  }, [selected, status, description, comment, draftKey]);
+  }, [selected, choiceId, status, description, comment, draftKey]);
   async function lock() {
     setLocking(true);
     setError("");
@@ -475,6 +482,12 @@ export function Evaluation({
           ? { question_id: question.id }
           : { assignment_id: question.assignment_id }),
         blind_labels: status === "selected" ? selected : [],
+        ...(fourChoice
+          ? {
+              choice_mode: "blind-four-v1",
+              blind_choice_id: status === "selected" ? choiceId : null,
+            }
+          : {}),
         blind_status: status,
         video_loaded: loaded,
         playback_seconds: seconds,
@@ -578,10 +591,15 @@ export function Evaluation({
                     "盲选答案已保存，不能返回修改。",
                     "Your blind selection is saved and cannot be changed.",
                   )
-                : t(
-                    "可多选。只依据画面，选择所有有依据的目标；标签名称与解释均提供中英文。",
-                    "Select all goals supported by the video. Labels and definitions are bilingual.",
-                  )}
+                : fourChoice
+                  ? t(
+                      "选择最符合画面的一个选项。一个选项可能包含多个意图标签。",
+                      "Choose the option that best matches the video. An option may contain multiple intent labels.",
+                    )
+                  : t(
+                      "可多选。只依据画面，选择所有有依据的目标；标签名称与解释均提供中英文。",
+                      "Select all goals supported by the video. Labels and definitions are bilingual.",
+                    )}
             </p>
             {locked ? (
               <Options
@@ -592,9 +610,58 @@ export function Evaluation({
               />
             ) : (
               <>
-                <div className="options blind-options">
-                  {(q.label_choices || [])
-                    .map((l: Any) => (
+                {fourChoice ? (
+                  <div
+                    className="options blind-options four-choice-options"
+                    role="radiogroup"
+                    aria-label={t("意图选项", "Intent options")}
+                  >
+                    {(q.choice_options || []).map((option: Any) => (
+                      <label
+                        key={option.id}
+                        className={
+                          "option " +
+                          (status === "selected" && choiceId === option.id
+                            ? "selected"
+                            : "")
+                        }
+                      >
+                        <input
+                          type="radio"
+                          name="blind-intent-choice"
+                          value={option.id}
+                          checked={
+                            status === "selected" && choiceId === option.id
+                          }
+                          onChange={() => {
+                            setStatus("selected");
+                            setChoiceId(option.id);
+                          }}
+                        />
+                        <span className="radio-indicator" aria-hidden="true">
+                          {status === "selected" && choiceId === option.id && (
+                            <span />
+                          )}
+                        </span>
+                        <div className="blind-option-copy">
+                          {option.labels.map((label: Any) => (
+                            <div className="choice-label" key={label.id}>
+                              <strong>
+                                {label.en} · {label.zh}
+                              </strong>
+                              <Pair
+                                zh={label.definition_zh}
+                                en={label.definition_en}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="options blind-options">
+                    {(q.label_choices || []).map((l: Any) => (
                       <label
                         className={
                           "option " +
@@ -631,7 +698,8 @@ export function Evaluation({
                         </div>
                       </label>
                     ))}
-                </div>
+                  </div>
+                )}
                 <Options
                   name="blind-status"
                   items={[
@@ -650,6 +718,7 @@ export function Evaluation({
                   onChange={(v) => {
                     setStatus(v);
                     setSelected([]);
+                    setChoiceId("");
                   }}
                 />
               </>
@@ -681,7 +750,8 @@ export function Evaluation({
                 (!locked &&
                   (!loaded ||
                     seconds < 1 ||
-                    (status === "selected" && !selected.length))) ||
+                    (status === "selected" &&
+                      (fourChoice ? !choiceId : !selected.length)))) ||
                 (locked && !description)
               }
               onClick={() =>

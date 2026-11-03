@@ -1,11 +1,28 @@
-import catalog from "../../data/label-catalog.json";
-export const labelsFor = (game: string) =>
-  (catalog as Record<string, any[]>)[game] || [];
-export function blindView(question: any, lock: any = null) {
+import { labelsFor } from "./blind-catalog";
+import { FOUR_CHOICE_PROTOCOL, restoredChoices } from "./four-choice";
+export { labelsFor } from "./blind-catalog";
+export function blindView(
+  question: any,
+  lock: any = null,
+  participantSeed = "",
+  generationSeed = "test-only",
+) {
   const { labels, description_en, description_zh, ...safe } = question;
   return {
     ...safe,
+    // Keep the public vocabulary for already-open older clients during rollout.
     label_choices: labelsFor(question.game),
+    ...(!(lock && lock.choice_mode !== FOUR_CHOICE_PROTOCOL)
+      ? {
+          choice_mode: FOUR_CHOICE_PROTOCOL,
+          choice_options: restoredChoices(
+            question,
+            lock,
+            participantSeed,
+            generationSeed,
+          ),
+        }
+      : {}),
     blind_mode: true,
     blind_locked: !!lock,
     blind_response: lock,

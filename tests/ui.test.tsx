@@ -3,6 +3,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {Entry,Evaluation,LanguageProvider} from '../app/study';
+import {blindView} from '../lib/study/blind';
 const question={id:'UI_FIXTURE',game:'dota',duration:20,labels:[{id:'defend',en:'defend',zh:'防守',definition_en:'Protect a position.',definition_zh:'保护一个位置。'}],task_en:'What is this side trying to do?',task_zh:'这一方想要做什么？',description_en:'Hold the tower.',description_zh:'守住防御塔。',video_url:'/test-fixture.mp4'};
 const render=(language:'en'|'zh',child:React.ReactNode)=>renderToStaticMarkup(<LanguageProvider initialLanguage={language}>{child}</LanguageProvider>);
 test('English and Chinese participant screens have real localized interface copy',()=>{
@@ -23,4 +24,13 @@ test('video buffers the current clip and exposes an accessible loading indicator
  const {Player}=await import('../app/study');
  const html=render('en',<Player src="/api/media/test_clip" onLoaded={()=>{}} onTime={()=>{}}/>);
  assert.match(html,/preload="auto"/);assert.match(html,/role="status"/);assert.match(html,/Loading video/);assert.match(html,/Reload/);
+});
+
+test('four-option screen uses one radio choice per label set and has no search field',()=>{
+ const q={...question,labels:[{...question.labels[0],id:'engage'}]};
+ const view=blindView(q,null,'ui');
+ const html=render('en',<Evaluation question={view} onSubmit={()=>{}}/>);
+ assert.equal((html.match(/name="blind-intent-choice"/g)||[]).length,4);
+ assert.match(html,/Choose the option that best matches/);
+ assert.doesNotMatch(html,/type="checkbox"|Search labels|搜索标签|Hold the tower/);
 });

@@ -20,3 +20,11 @@ test('blind metrics score automatic labels against independent human consensus',
  const exposed=analyzeBlind(rows.map(r=>({...r,blind_clean:false})),[{id:'q',game:'test',labels:[{id:'a'}]}]);assert.equal(exposed.ratings,0);assert.equal(exposed.excluded_preexposed_ratings,5);
  const uncertain=analyzeBlind(rows.map(r=>({...r,blind_response:{status:'insufficient',labels:[]}})),[{id:'q',game:'test',labels:[{id:'a'}]}]);assert.equal(uncertain.games.test.no_consensus_clips,1);assert.equal(uncertain.games.test.micro_f1,null);
 });
+
+test('four-choice agreement stays separate from open-label F1 and retains abstentions',async()=>{
+ const {analyzeFourChoice,analyzeBlind}=await import('../lib/study/blind-analysis.mjs');
+ const rows=Array.from({length:5},(_,i)=>({eligible:true,trial_type:'main',protocol:'blind-four-v1',blind_clean:true,participant_id:'p'+i,question_id:'q',description_support:'fully_supported',blind_response:i<3?{status:'selected',labels:['a','b']}:i===3?{status:'selected',labels:['c','d']}:{status:'insufficient',labels:[]}}));
+ const qs=[{id:'q',game:'test',kind:'main',labels:[{id:'a'},{id:'b'}]}];
+ const r=analyzeFourChoice([...rows,rows[0]],qs);assert.equal(r.ratings,5);assert.equal(r.games.test.reference_agreement,.6);assert.equal(r.games.test.agreement_given_selection,.75);assert.equal(r.games.test.abstention_rate,.2);assert.equal(r.games.test.majority_reference_agreement,1);assert.equal(analyzeBlind(rows,qs).ratings,0);
+ assert.equal(analyzeFourChoice(rows.slice(0,4),qs).complete_clips,0);
+});

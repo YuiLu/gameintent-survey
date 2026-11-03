@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "test:flow": "tsx tests/run-flow.ts",
     "test:flow:esa": "STUDY_TEST_GATEWAY=1 tsx tests/run-flow.ts",
-    "test:ui": "node --import tsx --test tests/ui.test.tsx tests/pilot.test.ts",
+    "test:ui": "node --import tsx --test tests/ui.test.tsx tests/pilot.test.ts tests/four-choice.test.ts",
     "test:deno": "deno run --no-config --no-lock --allow-env --allow-read tests/deno-smoke.mjs"
   },
   "dependencies": {
