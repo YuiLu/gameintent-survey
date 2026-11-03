@@ -11,10 +11,10 @@ test('English and Chinese participant screens have real localized interface copy
  assert.match(en,/Enter the study/);assert.match(en,/familiar games/);assert.doesNotMatch(en,/>10<|10 main|minimum/);
  assert.match(zh,/进入问卷/);assert.doesNotMatch(en,/续答码|resume code|先看一个示例/);
 });
-test('label and description judgments are paged while both annotation languages remain visible',()=>{
- const label=render('en',<Evaluation question={question} onSubmit={()=>{}}/>);
- const description=render('en',<Evaluation question={question} draft={{page:1,label_support:'supported'}} onSubmit={()=>{}}/>);
- assert.match(label,/Does the video support the intent label/);assert.match(label,/name="label"/);assert.doesNotMatch(label,/name="description"/);
- assert.match(description,/Is the intent description visually grounded/);assert.match(description,/name="description"/);assert.doesNotMatch(description,/name="label"/);
- for(const html of [label,description]){assert.match(html,/Hold the tower/);assert.match(html,/守住防御塔/);assert.match(html,/Protect a position/);assert.match(html,/保护一个位置/);}
+test('blind stage hides the annotation even if a draft requests the second page',()=>{
+ const blind={...question,blind_mode:true,label_choices:[question.labels[0]]};
+ const before=render('en',<Evaluation question={blind} draft={{page:1}} onSubmit={()=>{}}/>);
+ assert.match(before,/What is the target trying to do/);assert.match(before,/type="checkbox"/);assert.doesNotMatch(before,/Hold the tower|守住防御塔|name="description"/);
+ const after=render('en',<Evaluation question={{...blind,blind_locked:true,blind_response:{labels:['defend'],status:'selected'}}} onSubmit={()=>{}}/>);
+ assert.match(after,/Hold the tower/);assert.match(after,/守住防御塔/);assert.match(after,/name="description"/);assert.doesNotMatch(after,/type="checkbox"/);
 });

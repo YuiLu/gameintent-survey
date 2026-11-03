@@ -13,3 +13,10 @@ test('perfect constant-category agreement has undefined alpha, not an invented 1
 test('bootstrap intervals reproduce exactly under the recorded seed',()=>{const rs=[];for(let j=0;j<4;j++)for(let i=0;i<5;i++)rs.push(vote('q'+j,'p'+i,(j+i)%2?'supported':'contradicted'));const qs=Array.from({length:4},(_,i)=>q('q'+i));const c={...config,gameSizes:{a:1}};assert.deepEqual(analyze(rs,qs,c).game_macro,analyze(rs,qs,c).game_macro)});
 
 test('nominal Fleiss kappa matches a hand-calculated five-rater example',()=>{const rs=Array.from({length:5},(_,i)=>vote('one','p'+i,i<3?'supported':'contradicted'));const a=analyze(rs,[q('one')],{...config,gameSizes:{a:1}});assert.ok(Math.abs(a.games.a.agreement.label.fleiss_kappa-(-.25))<1e-12);const constant=analyze(Array.from({length:5},(_,i)=>vote('one','p'+i)),[q('one')],{...config,gameSizes:{a:1}});assert.equal(constant.games.a.agreement.label.fleiss_kappa,null);});
+test('blind metrics score automatic labels against independent human consensus',async()=>{
+ const {analyzeBlind}=await import('../lib/study/blind-analysis.mjs');
+ const rows=Array.from({length:5},(_,i)=>({eligible:true,trial_type:'main',protocol:'blind-v1',blind_clean:true,participant_id:'p'+i,question_id:'q',description_support:'fully_supported',blind_response:{status:'selected',labels:['a','b']}}));
+ const result=analyzeBlind(rows,[{id:'q',game:'test',labels:[{id:'a'}]}]);assert.equal(result.games.test.precision,1);assert.equal(result.games.test.recall,.5);assert.equal(result.games.test.micro_f1,2/3);assert.equal(result.games.test.exact_match,0);
+ const exposed=analyzeBlind(rows.map(r=>({...r,blind_clean:false})),[{id:'q',game:'test',labels:[{id:'a'}]}]);assert.equal(exposed.ratings,0);assert.equal(exposed.excluded_preexposed_ratings,5);
+ const uncertain=analyzeBlind(rows.map(r=>({...r,blind_response:{status:'insufficient',labels:[]}})),[{id:'q',game:'test',labels:[{id:'a'}]}]);assert.equal(uncertain.games.test.no_consensus_clips,1);assert.equal(uncertain.games.test.micro_f1,null);
+});

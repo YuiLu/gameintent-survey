@@ -1,0 +1,1298 @@
+{
+  "aoe2": [
+    {
+      "id": "boom",
+      "en": "boom",
+      "zh": "爆经济",
+      "definition_en": "Expand villager production and economy for stronger later development.",
+      "definition_zh": "扩大村民生产与经济规模，谋求后续发展优势。"
+    },
+    {
+      "id": "castle_age",
+      "en": "castle_age",
+      "zh": "升城堡时代",
+      "definition_en": "Advance to the Castle Age to unlock its units and technologies.",
+      "definition_zh": "升级城堡时代，解锁相应单位与科技。"
+    },
+    {
+      "id": "control",
+      "en": "control",
+      "zh": "控制地图",
+      "definition_en": "Maintain control of useful terrain, resources, or routes.",
+      "definition_zh": "控制有利地形、资源点或通行路线。"
+    },
+    {
+      "id": "counter",
+      "en": "counter",
+      "zh": "针对性反制",
+      "definition_en": "Produce or use units and upgrades that counter the opposing composition.",
+      "definition_zh": "生产或使用克制对方阵容的兵种与升级。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "drush",
+      "en": "drush",
+      "zh": "黑暗时代民兵快攻",
+      "definition_en": "Use an early Dark Age militia attack to disrupt the opponent.",
+      "definition_zh": "通过黑暗时代的早期民兵攻击干扰对手。"
+    },
+    {
+      "id": "eco",
+      "en": "eco",
+      "zh": "经济运营",
+      "definition_en": "Manage villagers and resources to support the intended build or army.",
+      "definition_zh": "管理村民与资源分配，支持既定发展或军队计划。"
+    },
+    {
+      "id": "feudal_rush",
+      "en": "feudal_rush",
+      "zh": "封建快攻",
+      "definition_en": "Apply military pressure during the Feudal Age.",
+      "definition_zh": "在封建时代投入军事压力。"
+    },
+    {
+      "id": "forward_build",
+      "en": "forward_build",
+      "zh": "前置建造",
+      "definition_en": "Construct military or defensive buildings near the opponent.",
+      "definition_zh": "在接近对手的位置建造军事或防御建筑。"
+    },
+    {
+      "id": "imp_age",
+      "en": "imp_age",
+      "zh": "升帝王时代",
+      "definition_en": "Advance to the Imperial Age for its technologies and army options.",
+      "definition_zh": "升级帝王时代，获取相应科技与军队选择。"
+    },
+    {
+      "id": "military_prod",
+      "en": "military_prod",
+      "zh": "生产军队",
+      "definition_en": "Train military units to build or reinforce the army.",
+      "definition_zh": "训练军事单位，组建或补充军队。"
+    },
+    {
+      "id": "open",
+      "en": "open",
+      "zh": "开局建造",
+      "definition_en": "Execute an opening build or early development plan.",
+      "definition_zh": "执行开局建造顺序或早期发展计划。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "push",
+      "en": "push",
+      "zh": "推进",
+      "definition_en": "Advance pressure toward an opposing position or objective.",
+      "definition_zh": "向对方位置或目标推进并施加压力。"
+    },
+    {
+      "id": "raid",
+      "en": "raid",
+      "zh": "袭扰经济",
+      "definition_en": "Attack exposed villagers or economy away from the main battle.",
+      "definition_zh": "攻击主战场之外暴露的村民或经济区域。"
+    },
+    {
+      "id": "scout",
+      "en": "scout",
+      "zh": "侦察",
+      "definition_en": "Gather information about enemy positions, units, or development.",
+      "definition_zh": "探查敌方位置、单位配置或发展情况。"
+    },
+    {
+      "id": "tech_upgrade",
+      "en": "tech_upgrade",
+      "zh": "研究升级",
+      "definition_en": "Research economic or military improvements.",
+      "definition_zh": "研究经济或军事强化升级。"
+    },
+    {
+      "id": "tower_rush",
+      "en": "tower_rush",
+      "zh": "前置塔压制",
+      "definition_en": "Build towers near an opponent to exert early pressure.",
+      "definition_zh": "在对手附近修建防御塔，实施早期压制。"
+    },
+    {
+      "id": "wall",
+      "en": "wall",
+      "zh": "围墙防护",
+      "definition_en": "Build walls or complete a wall-off to restrict enemy access.",
+      "definition_zh": "修筑围墙或完成封闭，限制敌方进入。"
+    }
+  ],
+  "wc3": [
+    {
+      "id": "attack",
+      "en": "attack",
+      "zh": "进攻",
+      "definition_en": "Attack opposing players, units, or structures to damage or eliminate them.",
+      "definition_zh": "进攻敌方玩家、单位或建筑，以造成伤害或消灭目标。"
+    },
+    {
+      "id": "counter_push",
+      "en": "counter_push",
+      "zh": "反推",
+      "definition_en": "Answer an enemy push by pressuring an opposing position.",
+      "definition_zh": "通过向敌方位置施压回应其推进。"
+    },
+    {
+      "id": "creep",
+      "en": "creep",
+      "zh": "练级打野",
+      "definition_en": "Defeat neutral creep camps for experience, resources, or items.",
+      "definition_zh": "击杀中立野怪，获取经验、资源或物品。"
+    },
+    {
+      "id": "creep_jack",
+      "en": "creep_jack",
+      "zh": "抓练级",
+      "definition_en": "Attack an opponent while they are fighting a neutral creep camp.",
+      "definition_zh": "在对手攻击中立野怪时突袭其部队。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "disengage",
+      "en": "disengage",
+      "zh": "脱离交战",
+      "definition_en": "Break contact and leave an ongoing engagement.",
+      "definition_zh": "中止接触并脱离正在进行的交战。"
+    },
+    {
+      "id": "economy",
+      "en": "economy",
+      "zh": "发展经济",
+      "definition_en": "Increase income or resource efficiency to support future play.",
+      "definition_zh": "提高收入或资源效率，为后续行动提供支持。"
+    },
+    {
+      "id": "expand",
+      "en": "expand",
+      "zh": "开拓分矿",
+      "definition_en": "Establish an additional base to increase economy and production capacity.",
+      "definition_zh": "建立额外基地，以扩大经济与生产能力。"
+    },
+    {
+      "id": "item_pickup",
+      "en": "item_pickup",
+      "zh": "拾取物品",
+      "definition_en": "Collect a dropped or available item.",
+      "definition_zh": "拾取掉落或可获取的物品。"
+    },
+    {
+      "id": "item_shop",
+      "en": "item_shop",
+      "zh": "商店购买",
+      "definition_en": "Purchase useful items from a shop.",
+      "definition_zh": "在商店购买所需物品。"
+    },
+    {
+      "id": "open",
+      "en": "open",
+      "zh": "开局建造",
+      "definition_en": "Execute an opening build or early development plan.",
+      "definition_zh": "执行开局建造顺序或早期发展计划。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "scout",
+      "en": "scout",
+      "zh": "侦察",
+      "definition_en": "Gather information about enemy positions, units, or development.",
+      "definition_zh": "探查敌方位置、单位配置或发展情况。"
+    },
+    {
+      "id": "tech",
+      "en": "tech",
+      "zh": "发展科技",
+      "definition_en": "Advance a technology tier or unlock new units and capabilities.",
+      "definition_zh": "提升科技阶段或解锁新的单位与能力。"
+    },
+    {
+      "id": "tower_rush",
+      "en": "tower_rush",
+      "zh": "前置塔压制",
+      "definition_en": "Build towers near an opponent to exert early pressure.",
+      "definition_zh": "在对手附近修建防御塔，实施早期压制。"
+    }
+  ],
+  "pubg": [
+    {
+      "id": "attack",
+      "en": "attack",
+      "zh": "进攻",
+      "definition_en": "Attack opposing players, units, or structures to damage or eliminate them.",
+      "definition_zh": "进攻敌方玩家、单位或建筑，以造成伤害或消灭目标。"
+    },
+    {
+      "id": "control_zone",
+      "en": "control_zone",
+      "zh": "控制圈内位置",
+      "definition_en": "Secure or maintain a useful position relative to the safe zone.",
+      "definition_zh": "占据或维持相对于安全区有利的位置。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "flank",
+      "en": "flank",
+      "zh": "侧翼包抄",
+      "definition_en": "Approach opponents from a side or rear route.",
+      "definition_zh": "从侧方或后方路线接近对手。"
+    },
+    {
+      "id": "heal",
+      "en": "heal",
+      "zh": "恢复状态",
+      "definition_en": "Restore health or shields before further action.",
+      "definition_zh": "恢复生命值或护盾，为后续行动做准备。"
+    },
+    {
+      "id": "loot",
+      "en": "loot",
+      "zh": "搜集物资",
+      "definition_en": "Collect weapons, ammunition, armor, or other supplies.",
+      "definition_zh": "收集武器、弹药、护甲及其他物资。"
+    },
+    {
+      "id": "retreat",
+      "en": "retreat",
+      "zh": "撤退",
+      "definition_en": "Withdraw from a dangerous engagement or position.",
+      "definition_zh": "从危险的交战或位置中后撤。"
+    },
+    {
+      "id": "revive",
+      "en": "revive",
+      "zh": "扶起队友",
+      "definition_en": "Revive a knocked teammate.",
+      "definition_zh": "扶起已被击倒的队友。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转移位置",
+      "definition_en": "Move to another area to change positioning, support, or objective pressure.",
+      "definition_zh": "转移到其他区域，以调整站位、支援或目标压力。"
+    },
+    {
+      "id": "scan",
+      "en": "scan",
+      "zh": "搜索敌情",
+      "definition_en": "Search for opponents or information about their positions.",
+      "definition_zh": "搜索对手，获取其位置或行动信息。"
+    }
+  ],
+  "cs": [
+    {
+      "id": "buy",
+      "en": "buy",
+      "zh": "购置装备",
+      "definition_en": "Purchase weapons, armor, or utility for the round.",
+      "definition_zh": "为当前回合购买武器、护甲或战术道具。"
+    },
+    {
+      "id": "clutch",
+      "en": "clutch",
+      "zh": "残局取胜",
+      "definition_en": "Attempt to win a round from a disadvantage with few teammates remaining.",
+      "definition_zh": "在己方剩余人数较少、局势不利的残局中争取赢下回合。"
+    },
+    {
+      "id": "default",
+      "en": "default",
+      "zh": "默认控图",
+      "definition_en": "Spread out to gather information and pressure before committing to a site.",
+      "definition_zh": "分散获取信息并施加地图压力，暂不决定最终攻点。"
+    },
+    {
+      "id": "defuse",
+      "en": "defuse",
+      "zh": "拆除炸弹",
+      "definition_en": "Attempt to defuse the planted bomb before it explodes.",
+      "definition_zh": "尝试在爆炸前拆除已安放的炸弹。"
+    },
+    {
+      "id": "entry",
+      "en": "entry",
+      "zh": "突破首杀",
+      "definition_en": "Lead an attack into a defended area and seek the opening duel or kill.",
+      "definition_zh": "率先进入敌方防守区域，争取突破交锋或首杀。"
+    },
+    {
+      "id": "execute",
+      "en": "execute",
+      "zh": "协同攻点",
+      "definition_en": "Commit a coordinated site attack, usually with planned utility.",
+      "definition_zh": "通常配合预定道具，协同投入对据点的进攻。"
+    },
+    {
+      "id": "flank",
+      "en": "flank",
+      "zh": "侧翼包抄",
+      "definition_en": "Approach opponents from a side or rear route.",
+      "definition_zh": "从侧方或后方路线接近对手。"
+    },
+    {
+      "id": "force",
+      "en": "force",
+      "zh": "强起购买",
+      "definition_en": "Spend limited funds on a competitive buy instead of saving for a later round.",
+      "definition_zh": "在经济不足时投入资金强起，而非为后续回合存钱。"
+    },
+    {
+      "id": "hold",
+      "en": "hold",
+      "zh": "守住位置",
+      "definition_en": "Maintain a defensive position or angle against opponents.",
+      "definition_zh": "维持并守住防守位置或架枪角度。"
+    },
+    {
+      "id": "lurk",
+      "en": "lurk",
+      "zh": "潜伏断后",
+      "definition_en": "Operate away from the main group to find gaps or punish rotations.",
+      "definition_zh": "脱离主队潜伏，寻找空隙或截击敌方转移。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "post_plant",
+      "en": "post_plant",
+      "zh": "下包后控制",
+      "definition_en": "Protect the planted bomb or spike and prevent the opponent from defusing.",
+      "definition_zh": "在炸弹或爆能器安放后保护它，阻止对手拆除。"
+    },
+    {
+      "id": "push",
+      "en": "push",
+      "zh": "推进",
+      "definition_en": "Advance pressure toward an opposing position or objective.",
+      "definition_zh": "向对方位置或目标推进并施加压力。"
+    },
+    {
+      "id": "retake",
+      "en": "retake",
+      "zh": "回防夺点",
+      "definition_en": "Re-enter a captured site to regain control and, if needed, defuse.",
+      "definition_zh": "重新进入已被占领的据点，夺回控制并在需要时拆除。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转点",
+      "definition_en": "Move between map areas or bombsites to change the attack or defense focus.",
+      "definition_zh": "在地图区域或包点间转移，改变进攻或防守重心。"
+    },
+    {
+      "id": "rush",
+      "en": "rush",
+      "zh": "快速突进",
+      "definition_en": "Attack an area quickly with limited delay or setup.",
+      "definition_zh": "减少等待与铺垫，快速突入目标区域。"
+    },
+    {
+      "id": "save",
+      "en": "save",
+      "zh": "保枪",
+      "definition_en": "Preserve surviving weapons and equipment rather than contest the current round.",
+      "definition_zh": "放弃继续争夺当前回合，保留存活队员的武器和装备。"
+    },
+    {
+      "id": "smoke",
+      "en": "smoke",
+      "zh": "使用烟雾",
+      "definition_en": "Use smoke to conceal movement or block opposing sightlines.",
+      "definition_zh": "使用烟雾掩护行动或阻断对方视线。"
+    }
+  ],
+  "valorant": [
+    {
+      "id": "anti_eco",
+      "en": "anti_eco",
+      "zh": "对抗经济局",
+      "definition_en": "Play against opponents on a low-resource buy while protecting the equipment advantage.",
+      "definition_zh": "面对低经济配置的对手，在争胜的同时保护装备优势。"
+    },
+    {
+      "id": "buy",
+      "en": "buy",
+      "zh": "购置装备",
+      "definition_en": "Purchase weapons, armor, or utility for the round.",
+      "definition_zh": "为当前回合购买武器、护甲或战术道具。"
+    },
+    {
+      "id": "clutch",
+      "en": "clutch",
+      "zh": "残局取胜",
+      "definition_en": "Attempt to win a round from a disadvantage with few teammates remaining.",
+      "definition_zh": "在己方剩余人数较少、局势不利的残局中争取赢下回合。"
+    },
+    {
+      "id": "default",
+      "en": "default",
+      "zh": "默认控图",
+      "definition_en": "Spread out to gather information and pressure before committing to a site.",
+      "definition_zh": "分散获取信息并施加地图压力，暂不决定最终攻点。"
+    },
+    {
+      "id": "eco",
+      "en": "eco",
+      "zh": "经济局存钱",
+      "definition_en": "Limit spending to preserve credits for later rounds.",
+      "definition_zh": "限制当前回合支出，为后续回合保留资金。"
+    },
+    {
+      "id": "entry",
+      "en": "entry",
+      "zh": "突破首杀",
+      "definition_en": "Lead an attack into a defended area and seek the opening duel or kill.",
+      "definition_zh": "率先进入敌方防守区域，争取突破交锋或首杀。"
+    },
+    {
+      "id": "execute",
+      "en": "execute",
+      "zh": "协同攻点",
+      "definition_en": "Commit a coordinated site attack, usually with planned utility.",
+      "definition_zh": "通常配合预定道具，协同投入对据点的进攻。"
+    },
+    {
+      "id": "flank",
+      "en": "flank",
+      "zh": "侧翼包抄",
+      "definition_en": "Approach opponents from a side or rear route.",
+      "definition_zh": "从侧方或后方路线接近对手。"
+    },
+    {
+      "id": "force",
+      "en": "force",
+      "zh": "强起购买",
+      "definition_en": "Spend limited funds on a competitive buy instead of saving for a later round.",
+      "definition_zh": "在经济不足时投入资金强起，而非为后续回合存钱。"
+    },
+    {
+      "id": "hold",
+      "en": "hold",
+      "zh": "守住位置",
+      "definition_en": "Maintain a defensive position or angle against opponents.",
+      "definition_zh": "维持并守住防守位置或架枪角度。"
+    },
+    {
+      "id": "lurk",
+      "en": "lurk",
+      "zh": "潜伏断后",
+      "definition_en": "Operate away from the main group to find gaps or punish rotations.",
+      "definition_zh": "脱离主队潜伏，寻找空隙或截击敌方转移。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "plant",
+      "en": "plant",
+      "zh": "安放爆能器",
+      "definition_en": "Plant the spike at a valid site.",
+      "definition_zh": "在有效据点安放爆能器。"
+    },
+    {
+      "id": "post_plant",
+      "en": "post_plant",
+      "zh": "下包后控制",
+      "definition_en": "Protect the planted bomb or spike and prevent the opponent from defusing.",
+      "definition_zh": "在炸弹或爆能器安放后保护它，阻止对手拆除。"
+    },
+    {
+      "id": "push",
+      "en": "push",
+      "zh": "推进",
+      "definition_en": "Advance pressure toward an opposing position or objective.",
+      "definition_zh": "向对方位置或目标推进并施加压力。"
+    },
+    {
+      "id": "retake",
+      "en": "retake",
+      "zh": "回防夺点",
+      "definition_en": "Re-enter a captured site to regain control and, if needed, defuse.",
+      "definition_zh": "重新进入已被占领的据点，夺回控制并在需要时拆除。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转点",
+      "definition_en": "Move between map areas or sites to change the attack or defense focus.",
+      "definition_zh": "在地图区域或据点间转移，改变进攻或防守重心。"
+    },
+    {
+      "id": "ult",
+      "en": "ult",
+      "zh": "使用终极技能",
+      "definition_en": "Use or commit an ultimate ability for a tactical purpose.",
+      "definition_zh": "为战术目标使用或投入终极技能。"
+    },
+    {
+      "id": "utility_clear",
+      "en": "utility_clear",
+      "zh": "道具清点",
+      "definition_en": "Use abilities to clear dangerous angles or force opponents out of cover.",
+      "definition_zh": "使用技能清查危险位置，或迫使对手离开掩体。"
+    },
+    {
+      "id": "vision_control",
+      "en": "vision_control",
+      "zh": "视线与信息控制",
+      "definition_en": "Gain or deny visual information using positioning or abilities.",
+      "definition_zh": "通过站位或技能获取信息，或阻断对方视线。"
+    }
+  ],
+  "lol": [
+    {
+      "id": "bait",
+      "en": "bait",
+      "zh": "诱导交战",
+      "definition_en": "Encourage an opponent to commit into a prepared response.",
+      "definition_zh": "诱使对手采取行动，再利用预备的应对进行反制。"
+    },
+    {
+      "id": "baron",
+      "en": "baron",
+      "zh": "争夺大龙",
+      "definition_en": "Contest or secure Baron Nashor.",
+      "definition_zh": "争夺或拿下纳什男爵。"
+    },
+    {
+      "id": "counter_engage",
+      "en": "counter_engage",
+      "zh": "反手接团",
+      "definition_en": "Respond to an enemy engage with a counterattack.",
+      "definition_zh": "在敌方开战后进行反击接团。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "disengage",
+      "en": "disengage",
+      "zh": "脱离交战",
+      "definition_en": "Break contact and leave an ongoing engagement.",
+      "definition_zh": "中止接触并脱离正在进行的交战。"
+    },
+    {
+      "id": "dive",
+      "en": "dive",
+      "zh": "越塔进攻",
+      "definition_en": "Attack opponents under a defending turret.",
+      "definition_zh": "在敌方防御塔保护范围内进攻对手。"
+    },
+    {
+      "id": "dragon",
+      "en": "dragon",
+      "zh": "争夺小龙",
+      "definition_en": "Contest or secure a dragon objective.",
+      "definition_zh": "争夺或拿下巨龙目标。"
+    },
+    {
+      "id": "escape",
+      "en": "escape",
+      "zh": "逃脱",
+      "definition_en": "Avoid an immediate threat and reach safety.",
+      "definition_zh": "摆脱当前威胁，进入相对安全的位置。"
+    },
+    {
+      "id": "farm",
+      "en": "farm",
+      "zh": "打钱发育",
+      "definition_en": "Gain gold and experience from creeps, minions, or neutral camps.",
+      "definition_zh": "通过小兵、野怪等获取金钱与经验。"
+    },
+    {
+      "id": "gank",
+      "en": "gank",
+      "zh": "游走抓人",
+      "definition_en": "Collapse on a target with additional allies or an unexpected approach.",
+      "definition_zh": "通过额外队友支援或意外路线，集中抓击目标。"
+    },
+    {
+      "id": "initiate",
+      "en": "initiate",
+      "zh": "先手开战",
+      "definition_en": "Start a fight by committing an opening attack or control ability.",
+      "definition_zh": "通过先手攻击或控制技能开启交战。"
+    },
+    {
+      "id": "invade",
+      "en": "invade",
+      "zh": "入侵野区",
+      "definition_en": "Enter enemy jungle to take resources or pressure opposing players.",
+      "definition_zh": "进入敌方野区，争夺资源或压迫对方玩家。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "pick",
+      "en": "pick",
+      "zh": "抓单击杀",
+      "definition_en": "Isolate and eliminate an opposing player outside a full team fight.",
+      "definition_zh": "在大规模团战之外，抓住落单或暴露的敌方玩家进行击杀。"
+    },
+    {
+      "id": "push",
+      "en": "push",
+      "zh": "推进",
+      "definition_en": "Advance pressure toward an opposing position or objective.",
+      "definition_zh": "向对方位置或目标推进并施加压力。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转移位置",
+      "definition_en": "Move to another area to change positioning, support, or objective pressure.",
+      "definition_zh": "转移到其他区域，以调整站位、支援或目标压力。"
+    },
+    {
+      "id": "secure_objective",
+      "en": "secure_objective",
+      "zh": "获取地图目标",
+      "definition_en": "Secure a neutral objective or important structure.",
+      "definition_zh": "拿下中立目标或重要建筑。"
+    },
+    {
+      "id": "siege",
+      "en": "siege",
+      "zh": "围攻建筑",
+      "definition_en": "Pressure a defended structure while maintaining a sustained attacking position.",
+      "definition_zh": "维持进攻阵地，对敌方防守的建筑持续施压。"
+    },
+    {
+      "id": "smite",
+      "en": "smite",
+      "zh": "惩戒争夺",
+      "definition_en": "Use Smite to secure or steal a neutral monster objective.",
+      "definition_zh": "使用惩戒拿下或抢夺中立野怪目标。"
+    },
+    {
+      "id": "teamfight",
+      "en": "teamfight",
+      "zh": "团战",
+      "definition_en": "Coordinate several teammates in a fight against the opposing team.",
+      "definition_zh": "多名队友协同参与对敌方队伍的交战。"
+    },
+    {
+      "id": "ward",
+      "en": "ward",
+      "zh": "布控视野",
+      "definition_en": "Place or remove wards to gain information or deny enemy vision.",
+      "definition_zh": "插眼或排眼，以获取信息或削弱敌方视野。"
+    }
+  ],
+  "sc2": [
+    {
+      "id": "attack",
+      "en": "attack",
+      "zh": "进攻",
+      "definition_en": "Attack opposing players, units, or structures to damage or eliminate them.",
+      "definition_zh": "进攻敌方玩家、单位或建筑，以造成伤害或消灭目标。"
+    },
+    {
+      "id": "contain",
+      "en": "contain",
+      "zh": "封锁压制",
+      "definition_en": "Restrict enemy movement or expansion without necessarily committing to a full assault.",
+      "definition_zh": "限制敌方出门或扩张，不一定投入全面进攻。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "drop",
+      "en": "drop",
+      "zh": "空投骚扰",
+      "definition_en": "Transport units into a position using air transport for an attack or harassment.",
+      "definition_zh": "利用运输单位空投部队，进行进攻或骚扰。"
+    },
+    {
+      "id": "expand",
+      "en": "expand",
+      "zh": "开拓分矿",
+      "definition_en": "Establish an additional base to increase economy and production capacity.",
+      "definition_zh": "建立额外基地，以扩大经济与生产能力。"
+    },
+    {
+      "id": "harass",
+      "en": "harass",
+      "zh": "骚扰牵制",
+      "definition_en": "Apply limited attacks to disrupt workers, production, or positioning.",
+      "definition_zh": "通过局部进攻干扰工人、生产或站位。"
+    },
+    {
+      "id": "hold",
+      "en": "hold",
+      "zh": "守住位置",
+      "definition_en": "Maintain a defensive position or angle against opponents.",
+      "definition_zh": "维持并守住防守位置或架枪角度。"
+    },
+    {
+      "id": "macro",
+      "en": "macro",
+      "zh": "运营发展",
+      "definition_en": "Manage economy, production, and reinforcements for sustained strength.",
+      "definition_zh": "管理经济、生产与增援，维持持续作战能力。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "retreat",
+      "en": "retreat",
+      "zh": "撤退",
+      "definition_en": "Withdraw from a dangerous engagement or position.",
+      "definition_zh": "从危险的交战或位置中后撤。"
+    },
+    {
+      "id": "scout",
+      "en": "scout",
+      "zh": "侦察",
+      "definition_en": "Gather information about enemy positions, units, or development.",
+      "definition_zh": "探查敌方位置、单位配置或发展情况。"
+    },
+    {
+      "id": "tech",
+      "en": "tech",
+      "zh": "发展科技",
+      "definition_en": "Advance a technology tier or unlock new units and capabilities.",
+      "definition_zh": "提升科技阶段或解锁新的单位与能力。"
+    },
+    {
+      "id": "transition",
+      "en": "transition",
+      "zh": "转型兵种",
+      "definition_en": "Shift the army composition or technology plan toward a different capability.",
+      "definition_zh": "调整部队组成或科技路线，向新的作战能力转型。"
+    },
+    {
+      "id": "upgrade",
+      "en": "upgrade",
+      "zh": "升级攻防或技能",
+      "definition_en": "Research unit improvements or abilities.",
+      "definition_zh": "研究单位属性强化或技能升级。"
+    }
+  ],
+  "dota": [
+    {
+      "id": "bait",
+      "en": "bait",
+      "zh": "诱导交战",
+      "definition_en": "Encourage an opponent to commit into a prepared response.",
+      "definition_zh": "诱使对手采取行动，再利用预备的应对进行反制。"
+    },
+    {
+      "id": "counter_initiate",
+      "en": "counter_initiate",
+      "zh": "反手开团",
+      "definition_en": "Respond to an enemy initiation with a coordinated counterattack.",
+      "definition_zh": "在敌方先手后，通过协同反击接团。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "escape",
+      "en": "escape",
+      "zh": "逃脱",
+      "definition_en": "Avoid an immediate threat and reach safety.",
+      "definition_zh": "摆脱当前威胁，进入相对安全的位置。"
+    },
+    {
+      "id": "farm",
+      "en": "farm",
+      "zh": "打钱发育",
+      "definition_en": "Gain gold and experience from creeps, minions, or neutral camps.",
+      "definition_zh": "通过小兵、野怪等获取金钱与经验。"
+    },
+    {
+      "id": "gank",
+      "en": "gank",
+      "zh": "游走抓人",
+      "definition_en": "Collapse on a target with additional allies or an unexpected approach.",
+      "definition_zh": "通过额外队友支援或意外路线，集中抓击目标。"
+    },
+    {
+      "id": "initiate",
+      "en": "initiate",
+      "zh": "先手开团",
+      "definition_en": "Start a fight with an opening jump, attack, or disabling ability.",
+      "definition_zh": "通过先手切入、攻击或控制技能开启交战。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "push",
+      "en": "push",
+      "zh": "推进",
+      "definition_en": "Advance pressure toward an opposing position or objective.",
+      "definition_zh": "向对方位置或目标推进并施加压力。"
+    },
+    {
+      "id": "roshan",
+      "en": "roshan",
+      "zh": "争夺肉山",
+      "definition_en": "Contest or kill Roshan to secure its rewards.",
+      "definition_zh": "争夺或击杀肉山，以获取其奖励。"
+    },
+    {
+      "id": "secure_rune",
+      "en": "secure_rune",
+      "zh": "控制神符",
+      "definition_en": "Obtain or deny a rune at its spawn or location.",
+      "definition_zh": "获取神符，或阻止对方获得神符。"
+    },
+    {
+      "id": "smoke",
+      "en": "smoke",
+      "zh": "开雾行动",
+      "definition_en": "Use Smoke of Deceit to conceal a rotation or approach.",
+      "definition_zh": "使用诡计之雾掩护转移或接近对手。"
+    },
+    {
+      "id": "survival",
+      "en": "survival",
+      "zh": "维持生存",
+      "definition_en": "Avoid elimination while under immediate threat.",
+      "definition_zh": "在面临直接威胁时避免被击杀。"
+    },
+    {
+      "id": "take_objective",
+      "en": "take_objective",
+      "zh": "获取地图目标",
+      "definition_en": "Secure a structure or neutral map objective.",
+      "definition_zh": "夺取建筑或中立地图目标。"
+    },
+    {
+      "id": "teamfight",
+      "en": "teamfight",
+      "zh": "团战",
+      "definition_en": "Coordinate several teammates in a fight against the opposing team.",
+      "definition_zh": "多名队友协同参与对敌方队伍的交战。"
+    },
+    {
+      "id": "ward",
+      "en": "ward",
+      "zh": "布控视野",
+      "definition_en": "Place or remove wards to gain information or deny enemy vision.",
+      "definition_zh": "插眼或排眼，以获取信息或削弱敌方视野。"
+    },
+    {
+      "id": "withdraw",
+      "en": "withdraw",
+      "zh": "后撤",
+      "definition_en": "Pull back from the current engagement or contested area.",
+      "definition_zh": "从当前交战或争夺区域中后撤。"
+    }
+  ],
+  "rl": [
+    {
+      "id": "aerial",
+      "en": "aerial",
+      "zh": "空中争球",
+      "definition_en": "Use aerial movement to reach or play the ball.",
+      "definition_zh": "通过空中机动接触或处理球。"
+    },
+    {
+      "id": "boost_pad",
+      "en": "boost_pad",
+      "zh": "补充氮气",
+      "definition_en": "Collect boost pads to replenish boost.",
+      "definition_zh": "拾取氮气点，补充加速资源。"
+    },
+    {
+      "id": "boost_starve",
+      "en": "boost_starve",
+      "zh": "限制对手氮气",
+      "definition_en": "Deny opponents access to boost by controlling or taking boost resources.",
+      "definition_zh": "控制或抢走氮气资源，限制对手补充。"
+    },
+    {
+      "id": "challenge",
+      "en": "challenge",
+      "zh": "上抢争球",
+      "definition_en": "Contest the opponent's next touch or possession.",
+      "definition_zh": "上前争夺对手的下一次触球或控球。"
+    },
+    {
+      "id": "clear",
+      "en": "clear",
+      "zh": "解围",
+      "definition_en": "Send the ball away from a threatening defensive area.",
+      "definition_zh": "将球送离有威胁的防守区域。"
+    },
+    {
+      "id": "counter_attack",
+      "en": "counter_attack",
+      "zh": "反击",
+      "definition_en": "Turn a defensive recovery or turnover into an attacking opportunity.",
+      "definition_zh": "利用防守回收或球权转换，迅速展开进攻。"
+    },
+    {
+      "id": "demo",
+      "en": "demo",
+      "zh": "撞毁对手",
+      "definition_en": "Demolish an opposing car to remove it temporarily from play.",
+      "definition_zh": "撞毁敌方车辆，使其暂时离场。"
+    },
+    {
+      "id": "dribble",
+      "en": "dribble",
+      "zh": "带球控球",
+      "definition_en": "Carry or control the ball through consecutive close touches.",
+      "definition_zh": "通过连续近距离触球携带或控制球。"
+    },
+    {
+      "id": "kickoff",
+      "en": "kickoff",
+      "zh": "开球争夺",
+      "definition_en": "Contest the ball from a kickoff restart.",
+      "definition_zh": "在重新开球时争夺球权。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "pass",
+      "en": "pass",
+      "zh": "传球配合",
+      "definition_en": "Send the ball to create a teammate's next touch or shot.",
+      "definition_zh": "将球传出，为队友后续触球或射门创造机会。"
+    },
+    {
+      "id": "possession",
+      "en": "possession",
+      "zh": "维持控球",
+      "definition_en": "Retain controlled touches rather than immediately conceding the ball.",
+      "definition_zh": "保持可控触球，避免立即交出球权。"
+    },
+    {
+      "id": "rotation",
+      "en": "rotation",
+      "zh": "轮转换位",
+      "definition_en": "Reassign attacking and defensive coverage through coordinated positioning.",
+      "definition_zh": "通过协同换位，轮换进攻与防守覆盖职责。"
+    },
+    {
+      "id": "save",
+      "en": "save",
+      "zh": "扑救守门",
+      "definition_en": "Prevent an opposing shot from entering the goal.",
+      "definition_zh": "阻止对方射门进入球门。"
+    },
+    {
+      "id": "shadow_defense",
+      "en": "shadow_defense",
+      "zh": "跟随防守",
+      "definition_en": "Track an attacker from a retreating position while covering the goal or next play.",
+      "definition_zh": "在回撤站位中跟随进攻者，覆盖球门或其下一步处理。"
+    },
+    {
+      "id": "shot",
+      "en": "shot",
+      "zh": "射门",
+      "definition_en": "Direct the ball toward the opposing goal to score.",
+      "definition_zh": "将球送向对方球门，争取进球。"
+    },
+    {
+      "id": "wall_play",
+      "en": "wall_play",
+      "zh": "沿墙处理",
+      "definition_en": "Use a wall to move, control, pass, or redirect the ball.",
+      "definition_zh": "利用墙面移动、控球、传球或改变球路。"
+    }
+  ],
+  "apex": [
+    {
+      "id": "banner_respawn",
+      "en": "banner_respawn",
+      "zh": "回收旗帜与重生",
+      "definition_en": "Retrieve a teammate's banner or use a respawn mechanism to return them to play.",
+      "definition_zh": "回收队友旗帜或利用重生机制使其返回比赛。"
+    },
+    {
+      "id": "engage",
+      "en": "engage",
+      "zh": "接战",
+      "definition_en": "Initiate or commit to combat with opponents.",
+      "definition_zh": "主动接触对手或投入交战。"
+    },
+    {
+      "id": "finish",
+      "en": "finish",
+      "zh": "补杀",
+      "definition_en": "Eliminate an already knocked opponent.",
+      "definition_zh": "补掉已被击倒的对手。"
+    },
+    {
+      "id": "flank",
+      "en": "flank",
+      "zh": "侧翼包抄",
+      "definition_en": "Approach opponents from a side or rear route.",
+      "definition_zh": "从侧方或后方路线接近对手。"
+    },
+    {
+      "id": "heal",
+      "en": "heal",
+      "zh": "恢复状态",
+      "definition_en": "Restore health or shields before further action.",
+      "definition_zh": "恢复生命值或护盾，为后续行动做准备。"
+    },
+    {
+      "id": "hold_zone",
+      "en": "hold_zone",
+      "zh": "控制圈内位置",
+      "definition_en": "Maintain useful ground or cover in relation to the ring.",
+      "definition_zh": "围绕安全圈维持有利地形或掩体控制。"
+    },
+    {
+      "id": "knock",
+      "en": "knock",
+      "zh": "击倒对手",
+      "definition_en": "Down an opposing player without necessarily eliminating the entire squad.",
+      "definition_zh": "击倒敌方玩家，但不一定已将其小队全部淘汰。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "reset",
+      "en": "reset",
+      "zh": "脱战重整",
+      "definition_en": "Create space to heal, reload, or reorganize before re-engaging.",
+      "definition_zh": "争取空间恢复、换弹或整队，再决定是否重新接战。"
+    },
+    {
+      "id": "retreat",
+      "en": "retreat",
+      "zh": "撤退",
+      "definition_en": "Withdraw from a dangerous engagement or position.",
+      "definition_zh": "从危险的交战或位置中后撤。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转移位置",
+      "definition_en": "Move to another area to change positioning, support, or objective pressure.",
+      "definition_zh": "转移到其他区域，以调整站位、支援或目标压力。"
+    },
+    {
+      "id": "scan",
+      "en": "scan",
+      "zh": "搜索敌情",
+      "definition_en": "Search for opponents or information about their positions.",
+      "definition_zh": "搜索对手，获取其位置或行动信息。"
+    },
+    {
+      "id": "scan_beacon",
+      "en": "scan_beacon",
+      "zh": "扫描信标",
+      "definition_en": "Use a beacon to obtain the ring or enemy information provided by that beacon type.",
+      "definition_zh": "使用信标，获取对应信标提供的圈形或敌情信息。"
+    },
+    {
+      "id": "third_party",
+      "en": "third_party",
+      "zh": "第三方切入",
+      "definition_en": "Attack an engagement involving other squads to exploit their ongoing fight.",
+      "definition_zh": "切入其他小队正在进行的战斗，利用其交战状态发起进攻。"
+    }
+  ],
+  "overwatch": [
+    {
+      "id": "cleanup",
+      "en": "cleanup",
+      "zh": "收割残局",
+      "definition_en": "Finish remaining opponents after gaining a fight advantage.",
+      "definition_zh": "在取得团战优势后，清除剩余对手。"
+    },
+    {
+      "id": "contest",
+      "en": "contest",
+      "zh": "争夺目标",
+      "definition_en": "Enter or remain on the objective to contest control or progress.",
+      "definition_zh": "进入或留在目标区域，争夺控制权或阻止推进。"
+    },
+    {
+      "id": "dive",
+      "en": "dive",
+      "zh": "突入集火",
+      "definition_en": "Commit mobile heroes onto a vulnerable enemy target or backline.",
+      "definition_zh": "利用机动英雄突入敌方薄弱目标或后排进行集火。"
+    },
+    {
+      "id": "duel",
+      "en": "duel",
+      "zh": "单挑交锋",
+      "definition_en": "Take a direct fight against a specific opposing player.",
+      "definition_zh": "与特定敌方玩家进行直接交锋。"
+    },
+    {
+      "id": "engage",
+      "en": "engage",
+      "zh": "接战",
+      "definition_en": "Initiate or commit to combat with opponents.",
+      "definition_zh": "主动接触对手或投入交战。"
+    },
+    {
+      "id": "focus",
+      "en": "focus",
+      "zh": "集中火力",
+      "definition_en": "Coordinate damage onto a shared opposing target.",
+      "definition_zh": "将火力集中到同一个敌方目标上。"
+    },
+    {
+      "id": "hold",
+      "en": "hold",
+      "zh": "守住位置",
+      "definition_en": "Maintain a defensive position or angle against opponents.",
+      "definition_zh": "维持并守住防守位置或架枪角度。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "peel",
+      "en": "peel",
+      "zh": "保护队友",
+      "definition_en": "Protect a threatened teammate by disrupting or driving away attackers.",
+      "definition_zh": "干扰或驱离攻击者，保护受到威胁的队友。"
+    },
+    {
+      "id": "pick",
+      "en": "pick",
+      "zh": "抓单击杀",
+      "definition_en": "Isolate and eliminate an opposing player outside a full team fight.",
+      "definition_zh": "在大规模团战之外，抓住落单或暴露的敌方玩家进行击杀。"
+    },
+    {
+      "id": "poke",
+      "en": "poke",
+      "zh": "远程消耗",
+      "definition_en": "Apply damage or pressure from a relatively safe distance before a full commitment.",
+      "definition_zh": "在全面投入交战前，从相对安全的距离造成伤害或压力。"
+    },
+    {
+      "id": "positioning",
+      "en": "positioning",
+      "zh": "调整站位",
+      "definition_en": "Move to or maintain a useful angle, cover, range, or formation.",
+      "definition_zh": "调整或维持有利角度、掩体、距离或阵型。"
+    },
+    {
+      "id": "regroup",
+      "en": "regroup",
+      "zh": "重新集结",
+      "definition_en": "Wait for or rejoin teammates before the next coordinated action.",
+      "definition_zh": "等待或重新会合队友，再展开下一次协同行动。"
+    },
+    {
+      "id": "retreat",
+      "en": "retreat",
+      "zh": "撤退",
+      "definition_en": "Withdraw from a dangerous engagement or position.",
+      "definition_zh": "从危险的交战或位置中后撤。"
+    },
+    {
+      "id": "stall",
+      "en": "stall",
+      "zh": "拖延目标",
+      "definition_en": "Delay enemy objective progress or extend a contest.",
+      "definition_zh": "拖延敌方目标进度，或延长争夺时间。"
+    },
+    {
+      "id": "swap",
+      "en": "swap",
+      "zh": "更换英雄",
+      "definition_en": "Change hero to alter composition or respond to the situation.",
+      "definition_zh": "更换英雄，以调整阵容或应对局势。"
+    },
+    {
+      "id": "ult",
+      "en": "ult",
+      "zh": "使用终极技能",
+      "definition_en": "Use or commit an ultimate ability for a tactical purpose.",
+      "definition_zh": "为战术目标使用或投入终极技能。"
+    }
+  ]
+}

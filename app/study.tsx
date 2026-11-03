@@ -323,57 +323,56 @@ export function Evaluation({
   busy?: boolean;
   practice?: boolean;
 }) {
-  const { t, language } = useLanguage(),
-    [label, setLabel] = useState(draft?.label_support || ""),
+  const { t, language } = useLanguage();
+  const [revealed, setRevealed] = useState<Any>(
+      question.blind_locked ? question : null,
+    ),
+    [selected, setSelected] = useState<string[]>(
+      question.blind_response?.labels || draft?.blind_labels || [],
+    ),
+    [status, setStatus] = useState(
+      question.blind_response?.status || draft?.blind_status || "selected",
+    ),
     [description, setDescription] = useState(draft?.description_support || ""),
     [comment, setComment] = useState(draft?.comment || ""),
-    [page, setPage] = useState(draft?.page === 1 ? 1 : 0),
     [loaded, setLoaded] = useState(false),
     [seconds, setSeconds] = useState(0),
-    [problem, setProblem] = useState(false),
-    [note, setNote] = useState(""),
-    [reported, setReported] = useState(false),
-    [reportError, setReportError] = useState("");
-  const draftCallback = useRef(onDraft);
-  const judgmentRef = useRef<HTMLDivElement>(null),
-    previousPage = useRef(page);
+    [locking, setLocking] = useState(false),
+    [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const q = revealed || question,
+    locked = !!revealed;
   useEffect(() => {
-    if (previousPage.current !== page) {
-      previousPage.current = page;
-      judgmentRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [page]);
-  draftCallback.current = onDraft;
-  useEffect(() => {
-    // Save locally immediately; only the server request is debounced. Closing or
-    // pausing during the debounce must not discard a just-selected answer.
     const answer = {
-      label_support: label,
+      blind_labels: selected,
+      blind_status: status,
       description_support: description,
       comment,
-      page,
     };
-    if (draftKey) {
-      try {
-        localStorage.setItem(draftKey, JSON.stringify(answer));
-      } catch {}
-    }
-    const timer = setTimeout(
-      () =>
-        draftCallback.current?.({
-          label_support: label,
-          description_support: description,
-          comment,
-          page,
-        }),
-      600,
-    );
+    if (draftKey) localStorage.setItem(draftKey, JSON.stringify(answer));
+    const timer = setTimeout(() => onDraft?.(answer), 600);
     return () => clearTimeout(timer);
-  }, [label, description, comment, page, draftKey]);
-  const game = GAMES.find((g) => g.id === question.game);
+  }, [selected, status, description, comment, draftKey]);
+  async function lock() {
+    setLocking(true);
+    setError("");
+    try {
+      const r = await api("blind-lock", {
+        ...(practice
+          ? { question_id: question.id }
+          : { assignment_id: question.assignment_id }),
+        blind_labels: status === "selected" ? selected : [],
+        blind_status: status,
+        video_loaded: loaded,
+        playback_seconds: seconds,
+      });
+      setRevealed(r.question);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setLocking(false);
+    }
+  }
   return (
     <>
       <div className="review-top">
@@ -384,12 +383,15 @@ export function Evaluation({
               : t("视频评价", "VIDEO REVIEW")}
           </span>
           <h1>
-            {language === "zh" ? game?.zh : game?.en}
-            <span>{language === "zh" ? game?.en : game?.zh}</span>
+            {
+              GAMES.find((g) => g.id === q.game)?.[
+                language === "zh" ? "zh" : "en"
+              ]
+            }
           </h1>
         </div>
         <span className="tag">
-          {Math.round(question.duration)} {t("秒", "sec")}
+          {Math.round(q.duration)} {t("秒", "sec")}
         </span>
       </div>
       <div className="evaluation-layout">
@@ -400,223 +402,238 @@ export function Evaluation({
             onTime={setSeconds}
           />
           <section className="annotation-card">
-            <div className="card-label">
-              <BookOpen size={16} />
-              {t("待评价标注", "Annotation to evaluate")}
-            </div>
             <div className="task">
               <small>{t("所问对象与任务", "ACTOR AND TASK")}</small>
-              <Pair zh={question.task_zh} en={question.task_en} />
+              <Pair zh={q.task_zh} en={q.task_en} />
             </div>
-            <div className="label-list">
-              {question.labels.map((l: Any) => (
-                <div className="label-item" key={l.id}>
-                  <div>
-                    <code>{l.en || l.id}</code>
-                    <span>{l.zh}</span>
-                  </div>
-                  <Pair zh={l.definition_zh} en={l.definition_en} />
+            {locked && (
+              <>
+                <p>
+                  {t("你的盲选（已锁定）：", "Your locked selection: ")}
+                  {q.blind_response?.status === "selected"
+                    ? q.blind_response.labels.join(", ")
+                    : q.blind_response?.status}
+                </p>
+                <div className="card-label">
+                  {t("原始标注", "Original annotation")}
                 </div>
-              ))}
-            </div>
-            <div className="description">
-              <small>{t("意图描述", "INTENT DESCRIPTION")}</small>
-              <Pair zh={question.description_zh} en={question.description_en} />
-            </div>
-            <div className="translation-note">
-              {question.original_language === "zh"
-                ? t(
-                    "中文为原标注，英文为对照译文。",
-                    "Chinese is the original annotation; English is a translation.",
-                  )
-                : t(
-                    "英文为原标注，中文为对照译文。",
-                    "English is the original annotation; Chinese is a translation.",
-                  )}
-            </div>
+                <div className="label-list">
+                  {q.labels.map((l: Any) => (
+                    <div className="label-item" key={l.id}>
+                      <code>{l.en}</code> · {l.zh}
+                      <Pair zh={l.definition_zh} en={l.definition_en} />
+                    </div>
+                  ))}
+                </div>
+                <div className="description">
+                  <small>{t("意图描述", "INTENT DESCRIPTION")}</small>
+                  <Pair zh={q.description_zh} en={q.description_en} />
+                </div>
+              </>
+            )}
           </section>
         </div>
-        <div className="judgments" ref={judgmentRef}>
-          <nav
-            className="judgment-pages"
-            aria-label={t("本题分页", "Question pages")}
-          >
-            <button
-              type="button"
-              aria-current={page === 0 ? "page" : undefined}
-              onClick={() => setPage(0)}
-            >
-              {t("1 标签判断", "1 Labels")}
-            </button>
-            <button
-              type="button"
-              aria-current={page === 1 ? "page" : undefined}
-              disabled={!label}
-              onClick={() => setPage(1)}
-            >
-              {t("2 描述判断", "2 Description")}
-            </button>
-          </nav>
-          <section className="question-card" key={page}>
-            <div className="question-heading">
-              <span>0{page + 1}</span>
-              <div>
-                <h2>
-                  {page === 0
-                    ? t(
-                        "标签是否符合画面中的目标？",
-                        "Does the video support the intent label(s)?",
-                      )
-                    : t(
-                        "意图描述是否得到画面支持？",
-                        "Is the intent description visually grounded?",
-                      )}
-                </h2>
-                <p>
-                  {t(
-                    "只依据画面；多个目标可以同时成立。",
-                    "Use only visible evidence; multiple goals may coexist.",
-                  )}
-                </p>
-              </div>
-            </div>
-            <Options
-              name={page === 0 ? "label" : "description"}
-              items={page === 0 ? LABEL_OPTIONS : DESCRIPTION_OPTIONS}
-              value={page === 0 ? label : description}
-              onChange={page === 0 ? setLabel : setDescription}
-            />
-          </section>
-          {page === 1 && (
-            <details className="optional-comment">
-              <summary>
-                {t("补充说明（选填）", "Additional comments (optional)")}
-                <ChevronDown size={14} />
-              </summary>
-              <textarea
-                value={comment}
-                maxLength={2000}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder={t(
-                  "可说明歧义或播放问题。",
-                  "Describe any ambiguity or technical issue.",
-                )}
-              />
-            </details>
-          )}
-          <div className="submit-row">
-            <small aria-live="polite">
-              {!loaded || seconds < 1
+        <div className="judgments">
+          <nav className="judgment-pages">
+            <span>
+              {locked
                 ? t(
-                    "请先播放视频，再完成判断。",
-                    "Play the video before completing your judgments.",
+                    "1 盲选已锁定 → 2 描述评价",
+                    "1 Answers locked → 2 Description",
                   )
                 : t(
-                    "草稿自动保存；提交后锁定回答。",
-                    "Drafts save automatically. Submitted answers are locked.",
+                    "1 盲选标签 → 2 描述评价",
+                    "1 Choose labels → 2 Description",
                   )}
-            </small>
-            <div className="actions">
-              {page === 1 && (
-                <Button secondary disabled={busy} onClick={() => setPage(0)}>
-                  <ArrowLeft size={16} />
-                  {t("上一页", "Back")}
-                </Button>
+            </span>
+          </nav>
+          <section className="question-card">
+            <h2>
+              {locked
+                ? t(
+                    "意图描述是否得到画面支持？",
+                    "Is the intent description visually grounded?",
+                  )
+                : t(
+                    "画面中的对象正在试图做什么？",
+                    "What is the target trying to do?",
+                  )}
+            </h2>
+            <p>
+              {locked
+                ? t(
+                    "盲选答案已保存，不能返回修改。",
+                    "Your blind selection is saved and cannot be changed.",
+                  )
+                : t(
+                    "可多选。只依据画面，选择所有有依据的目标；标签名称与解释均提供中英文。",
+                    "Select all goals supported by the video. Labels and definitions are bilingual.",
+                  )}
+            </p>
+            {locked ? (
+              <Options
+                name="description"
+                items={DESCRIPTION_OPTIONS}
+                value={description}
+                onChange={setDescription}
+              />
+            ) : (
+              <>
+                <input
+                  aria-label={t("搜索标签", "Search labels")}
+                  placeholder={t(
+                    "搜索中英文标签",
+                    "Search English or Chinese labels",
+                  )}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <div className="options blind-options">
+                  {(q.label_choices || [])
+                    .filter((l: Any) =>
+                      (
+                        l.en +
+                        " " +
+                        l.zh +
+                        " " +
+                        l.definition_en +
+                        " " +
+                        l.definition_zh
+                      )
+                        .toLowerCase()
+                        .includes(search.toLowerCase()),
+                    )
+                    .map((l: Any) => (
+                      <label
+                        className={
+                          "option " +
+                          (selected.includes(l.id) && status === "selected"
+                            ? "selected"
+                            : "")
+                        }
+                        key={l.id}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            status === "selected" && selected.includes(l.id)
+                          }
+                          onChange={() => {
+                            setStatus("selected");
+                            setSelected((a) =>
+                              a.includes(l.id)
+                                ? a.filter((v) => v !== l.id)
+                                : [...a, l.id],
+                            );
+                          }}
+                        />
+                        <span>
+                          <strong>
+                            {l.en} · {l.zh}
+                          </strong>
+                          <Pair zh={l.definition_zh} en={l.definition_en} />
+                        </span>
+                      </label>
+                    ))}
+                </div>
+                <Options
+                  name="blind-status"
+                  items={[
+                    {
+                      value: "insufficient",
+                      title: "画面信息不足",
+                      en: "Insufficient visual evidence",
+                    },
+                    {
+                      value: "unfamiliar",
+                      title: "不熟悉这个局面",
+                      en: "Unfamiliar situation",
+                    },
+                  ]}
+                  value={status}
+                  onChange={(v) => {
+                    setStatus(v);
+                    setSelected([]);
+                  }}
+                />
+              </>
+            )}
+          </section>
+          {locked && (
+            <textarea
+              value={comment}
+              maxLength={2000}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder={t(
+                "补充说明（选填）",
+                "Additional comments (optional)",
               )}
-              <Button
-                disabled={
-                  busy ||
-                  !label ||
-                  (page === 1 && (!description || !loaded || seconds < 1))
-                }
-                onClick={() =>
-                  page === 0
-                    ? setPage(1)
-                    : onSubmit({
-                        label_support: label,
-                        description_support: description,
-                        comment,
-                        video_loaded: loaded,
-                        playback_seconds: seconds,
-                        ui_language: language,
-                      })
-                }
-              >
-                {busy ? <Loader2 className="spin" size={16} /> : null}
-                {page === 0
-                  ? t("下一页", "Next")
-                  : practice
-                    ? t("提交示例", "Submit example")
-                    : t("提交并继续", "Submit and continue")}
-                <ArrowRight size={16} />
-              </Button>
-            </div>
+            />
+          )}
+          {error && <Notice error>{errorText(error, language)}</Notice>}
+          <div className="submit-row">
+            <small>
+              {t(
+                "请先播放视频；进度自动保存。",
+                "Play the video first. Progress saves automatically.",
+              )}
+            </small>
+            <Button
+              disabled={
+                busy ||
+                locking ||
+                (!locked &&
+                  (!loaded ||
+                    seconds < 1 ||
+                    (status === "selected" && !selected.length))) ||
+                (locked && !description)
+              }
+              onClick={() =>
+                locked
+                  ? onSubmit({
+                      description_support: description,
+                      comment,
+                      video_loaded: true,
+                      playback_seconds: Math.max(seconds, 1),
+                      ui_language: language,
+                    })
+                  : lock()
+              }
+            >
+              {locking ? (
+                <Loader2 className="spin" />
+              ) : locked ? (
+                t("提交并继续", "Submit and continue")
+              ) : (
+                t("锁定答案并查看原标注", "Lock answers and reveal annotation")
+              )}
+            </Button>
           </div>
-          <button className="text-button" onClick={() => setProblem(true)}>
-            {t("播放遇到问题？", "Having trouble playing the video?")}
+          <button
+            className="text-button"
+            onClick={async () => {
+              try {
+                await api("technical", {
+                  ...(practice
+                    ? { question_id: q.id }
+                    : { assignment_id: q.assignment_id }),
+                  note: "Playback issue reported",
+                });
+                setError(
+                  t(
+                    "播放问题已记录，进度已保留。",
+                    "Playback issue recorded. Progress retained.",
+                  ),
+                );
+              } catch (e) {
+                setError((e as Error).message);
+              }
+            }}
+          >
+            {t("报告播放问题", "Report playback issue")}
           </button>
         </div>
       </div>
-      {problem && (
-        <div className="modal-backdrop">
-          <div
-            className="modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("播放问题", "Playback issue")}
-          >
-            <button
-              className="modal-close"
-              aria-label={t("关闭", "Close")}
-              onClick={() => setProblem(false)}
-            >
-              <X />
-            </button>
-            <h2>{t("播放问题", "Playback issue")}</h2>
-            <p>
-              {t(
-                "请尝试重新加载。播放故障不应记录成“不支持标注”。",
-                "Try reloading the video. A playback failure should not be recorded as an unsupported annotation.",
-              )}
-            </p>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder={t("请描述播放问题", "Describe the playback issue")}
-            />
-            {reported ? (
-              <Notice>
-                {t(
-                  "已记录，进度保留。",
-                  "Reported. Your progress is retained.",
-                )}
-              </Notice>
-            ) : (
-              <Button
-                onClick={async () => {
-                  try {
-                    await api("technical", {
-                      ...(practice
-                        ? { question_id: question.id }
-                        : { assignment_id: question.assignment_id }),
-                      note,
-                    });
-                    setReported(true);
-                  } catch (e) {
-                    setReportError(errorText((e as Error).message, language));
-                  }
-                }}
-              >
-                {t("记录播放问题", "Report issue")}
-              </Button>
-            )}
-            {reportError && <Notice error>{reportError}</Notice>}
-            <Button secondary onClick={() => setProblem(false)}>
-              {t("返回题目", "Back to question")}
-            </Button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
@@ -732,7 +749,12 @@ export function Entry({
       <Steps active={1} />
       <section className="enrollment paged-enrollment">
         <div className="section-heading">
-          <h1>{t("选择你熟悉的游戏（可多选）", "Choose the games you know (select all that apply)")}</h1>
+          <h1>
+            {t(
+              "选择你熟悉的游戏（可多选）",
+              "Choose the games you know (select all that apply)",
+            )}
+          </h1>
           <button className="text-button" onClick={() => setPage(0)}>
             <ArrowLeft size={15} />
             {t("上一页", "Back")}
@@ -744,7 +766,13 @@ export function Entry({
               key={g.id}
               aria-pressed={games.includes(g.id)}
               className={"game-card " + (games.includes(g.id) ? "chosen" : "")}
-              onClick={() => setGames(values => values.includes(g.id) ? values.filter(v => v !== g.id) : [...values, g.id])}
+              onClick={() =>
+                setGames((values) =>
+                  values.includes(g.id)
+                    ? values.filter((v) => v !== g.id)
+                    : [...values, g.id],
+                )
+              }
             >
               <span
                 className="game-monogram"
@@ -877,7 +905,9 @@ export function Entry({
             )}
           </p>
           <Button
-            disabled={!open || !games.length || !consent || !experience.length || busy}
+            disabled={
+              !open || !games.length || !consent || !experience.length || busy
+            }
             onClick={() =>
               onStart({
                 games,
@@ -923,7 +953,14 @@ function Training({
           )}
         </p>
         <div className="feedback">
-          {!feedback.label_support && <p>{t("测试示例尚未制定人工参考答案；你的选择已保存。", "This pilot example has no manually verified reference answer yet. Your judgments are saved.")}</p>}
+          {!feedback.label_support && (
+            <p>
+              {t(
+                "测试示例尚未制定人工参考答案；你的选择已保存。",
+                "This pilot example has no manually verified reference answer yet. Your judgments are saved.",
+              )}
+            </p>
+          )}
           <p>
             {t("标签：", "Labels: ")}
             {
@@ -1090,7 +1127,11 @@ export function ParticipantStudy() {
     queues = useRef<Record<string, Promise<void>>>({}),
     currentId = useRef("");
   const refresh = useCallback(async () => {
-    const s = await api("me");
+    let s = await api("me");
+    if (s.participant.profile.protocol !== "blind-v1") {
+      await api("blind/start", {});
+      s = await api("me");
+    }
     setState(s);
     currentId.current = s.assignment?.id || "";
   }, []);
@@ -1116,7 +1157,7 @@ export function ParticipantStudy() {
     setBusy(true);
     setError("");
     try {
-      await api("enroll", data);
+      await api("enroll", { ...data, protocol: "blind-v1" });
       await refresh();
       window.scrollTo(0, 0);
     } catch (e) {
@@ -1165,16 +1206,35 @@ export function ParticipantStudy() {
     }
   }
   async function finish() {
-    setBusy(true); setError("");
-    try { await api("finish", {}); await refresh(); }
-    catch (e) { setError((e as Error).message); }
-    finally { setBusy(false); }
+    setBusy(true);
+    setError("");
+    try {
+      await api("finish", {});
+      await refresh();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
   }
   async function more() {
-    setBusy(true); setError("");
-    try { const result = await api("more", {}); if (!result.added) setError(t("所选游戏暂时没有更多待评价样本。", "There are no more available clips in your selected games.")); await refresh(); }
-    catch (e) { setError((e as Error).message); }
-    finally { setBusy(false); }
+    setBusy(true);
+    setError("");
+    try {
+      const result = await api("more", {});
+      if (!result.added)
+        setError(
+          t(
+            "所选游戏暂时没有更多待评价样本。",
+            "There are no more available clips in your selected games.",
+          ),
+        );
+      await refresh();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
   }
   async function withdraw() {
     if (
@@ -1264,7 +1324,11 @@ export function ParticipantStudy() {
             "Your responses and drafts save automatically. Close this page and return in the same browser to continue.",
           )}
         </p>
-        {state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}
+        {state.progress.can_finish && (
+          <Button secondary disabled={busy} onClick={finish}>
+            {t("结束并提交", "Finish study")}
+          </Button>
+        )}
         <Button onClick={() => setPaused(false)}>
           <Play size={16} />
           {t("继续评价", "Continue reviewing")}
@@ -1292,7 +1356,8 @@ export function ParticipantStudy() {
         <Steps active={3} />
         <div className="session-strip">
           <span>
-            {t("已完成", "Reviewed")} {state.progress.done} {t("段视频", "clips")}
+            {t("已完成", "Reviewed")} {state.progress.done}{" "}
+            {t("段视频", "clips")}
           </span>
           <span className="save-status" role="status">
             {saved === "saving"
@@ -1304,7 +1369,11 @@ export function ParticipantStudy() {
                   )
                 : t("进度自动保存", "Progress saved automatically")}
           </span>
-          {state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}
+          {state.progress.can_finish && (
+            <Button secondary disabled={busy} onClick={finish}>
+              {t("结束并提交", "Finish study")}
+            </Button>
+          )}
           <button onClick={() => setPaused(true)}>
             <Pause size={14} />
             {t("暂停", "Pause")}
@@ -1329,7 +1398,19 @@ export function ParticipantStudy() {
       </div>
     );
   } else if (state.progress.batch_done && state.participant.profile.flexible)
-    content = (<div className="center-card"><h1>{t("回答已保存", "Your responses are saved")}</h1><Button disabled={busy} onClick={more}>{t("继续评价", "Review more clips")}</Button>{state.progress.can_finish && <Button secondary disabled={busy} onClick={finish}>{t("结束并提交", "Finish study")}</Button>}</div>);
+    content = (
+      <div className="center-card">
+        <h1>{t("回答已保存", "Your responses are saved")}</h1>
+        <Button disabled={busy} onClick={more}>
+          {t("继续评价", "Review more clips")}
+        </Button>
+        {state.progress.can_finish && (
+          <Button secondary disabled={busy} onClick={finish}>
+            {t("结束并提交", "Finish study")}
+          </Button>
+        )}
+      </div>
+    );
   else
     content = (
       <div className="center-card">
@@ -1341,7 +1422,16 @@ export function ParticipantStudy() {
     );
   return (
     <>
-      {(config?.status === "pilot" || state?.study?.status === "pilot") && <div className="global-error"><Notice>{t("测试问卷 · 本轮为研究人员试填，回答不进入正式研究结果。", "Pilot study · Researcher testing only. These responses are excluded from the research results.")}</Notice></div>}
+      {(config?.status === "pilot" || state?.study?.status === "pilot") && (
+        <div className="global-error">
+          <Notice>
+            {t(
+              "测试问卷 · 本轮为研究人员试填，回答不进入正式研究结果。",
+              "Pilot study · Researcher testing only. These responses are excluded from the research results.",
+            )}
+          </Notice>
+        </div>
+      )}
       {state && error && (
         <div className="global-error">
           <Notice error>{errorText(error, language)}</Notice>
