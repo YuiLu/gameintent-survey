@@ -77,6 +77,7 @@ function errorText(message: string, language: Language) {
   const known: Record<string, string> = {
     "研究尚未开放正式参与，可先体验演示。":
       "The study is not open for participation yet.",
+    "所选游戏当前名额已满，请稍后再试。": "The selected games are currently full. Please try again later.",
     "这款游戏目前名额已满，请稍后再试。":
       "All places for this game are currently filled. Please try again later.",
     "当前名额刚被分配完。你的练习已保存，可稍后再试。":
@@ -141,7 +142,6 @@ function Steps({ active }: { active: number }) {
       {[
         [t("研究说明", "Overview")],
         [t("选择游戏", "Your game")],
-        [t("入门示例", "Examples")],
         [t("视频评价", "Review")],
       ].map(([label], i) => (
         <span
@@ -877,11 +877,8 @@ export function Entry({
                   ),
                 ],
                 [
-                  t("自动进入示例引导", "Follow the guided examples"),
-                  t(
-                    "先完成两个简短示例，了解判断标准。",
-                    "Two brief examples introduce the judgment criteria.",
-                  ),
+                  t("观看比赛片段", "Watch a match clip"),
+                  t("仅依据画面判断，可暂停和重播。", "Judge only what the video supports. Pause or replay as needed."),
                 ],
                 [
                   t("逐页完成评价", "Review one page at a time"),
@@ -1066,8 +1063,8 @@ export function Entry({
         <div className="join-bottom">
           <p>
             {t(
-              "下一页将自动展示所选游戏的入门示例。",
-              "The next page automatically shows examples for your selected game.",
+              "下一步直接开始视频评价。",
+              "The next step starts the video reviews.",
             )}
           </p>
           <Button
@@ -1093,194 +1090,6 @@ export function Entry({
     </main>
   );
 }
-function Training({
-  state,
-  refresh,
-  setError,
-}: {
-  state: Any;
-  refresh: () => Promise<void>;
-  setError: (v: string) => void;
-}) {
-  const { t, language } = useLanguage(),
-    [feedback, setFeedback] = useState<Any>(null),
-    [choice, setChoice] = useState(""),
-    [busy, setBusy] = useState(false),
-    next = state.practice.find((p: Any) => !p.response);
-  if (feedback)
-    return (
-      <div className="center-card">
-        <BookOpen />
-        <h1>{t("示例反馈", "Example feedback")}</h1>
-        <p>
-          {t(
-            "只判断画面是否提供证据。多个目标可共存，没有依据时不用猜测。",
-            "Judge only the visible evidence. Multiple goals may coexist; do not guess when evidence is missing.",
-          )}
-        </p>
-        <div className="feedback">
-          {!feedback.label_support && (
-            <p>
-              {t(
-                "测试示例尚未制定人工参考答案；你的选择已保存。",
-                "This pilot example has no manually verified reference answer yet. Your judgments are saved.",
-              )}
-            </p>
-          )}
-          <p>
-            {t("标签：", "Labels: ")}
-            {
-              (
-                LABEL_OPTIONS.find(
-                  (o) => o.value === feedback.label_support,
-                ) as Any
-              )?.[language === "zh" ? "title" : "en"]
-            }
-          </p>
-          <p>
-            {t("描述：", "Description: ")}
-            {
-              (
-                DESCRIPTION_OPTIONS.find(
-                  (o) => o.value === feedback.description_support,
-                ) as Any
-              )?.[language === "zh" ? "title" : "en"]
-            }
-          </p>
-        </div>
-        <Button onClick={() => setFeedback(null)}>
-          {t("继续", "Continue")}
-          <ArrowRight size={16} />
-        </Button>
-      </div>
-    );
-  if (next)
-    return (
-      <div className="review-wrap">
-        <Steps active={2} />
-        <div className="session-strip">
-          <span>
-            {t("示例", "Example")}{" "}
-            {state.practice.filter((p: Any) => p.response).length + 1} / 2
-          </span>
-          <span>
-            {t("不计入正式结果", "Not included in the study results")}
-          </span>
-        </div>
-        <Evaluation
-          key={next.question.id}
-          question={next.question}
-          practice
-          draftKey={
-            "gi-practice-" + state.participant.id + "-" + next.question.id
-          }
-          draft={(() => {
-            try {
-              return JSON.parse(
-                localStorage.getItem(
-                  "gi-practice-" +
-                    state.participant.id +
-                    "-" +
-                    next.question.id,
-                ) || "null",
-              );
-            } catch {
-              return null;
-            }
-          })()}
-          onDraft={(a) => {
-            try {
-              localStorage.setItem(
-                "gi-practice-" + state.participant.id + "-" + next.question.id,
-                JSON.stringify(a),
-              );
-            } catch {}
-          }}
-          busy={busy}
-          onSubmit={async (a) => {
-            setBusy(true);
-            try {
-              const result = await api("practice", {
-                ...a,
-                question_id: next.question.id,
-              });
-              try {
-                localStorage.removeItem(
-                  "gi-practice-" +
-                    state.participant.id +
-                    "-" +
-                    next.question.id,
-                );
-              } catch {}
-              setFeedback(result.expected || {});
-              await refresh();
-            } catch (e) {
-              setError((e as Error).message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        />
-      </div>
-    );
-  return (
-    <div className="center-card">
-      <Steps active={2} />
-      <h1>{t("开始前，确认一下", "One quick check")}</h1>
-      <p>
-        {t(
-          "如果标注听起来合理，但画面没有判断依据，应该怎么办？",
-          "If an annotation sounds plausible but the video lacks evidence, what should you do?",
-        )}
-      </p>
-      <Options
-        name="qualification"
-        value={choice}
-        onChange={setChoice}
-        items={[
-          {
-            value: "agree",
-            title: "常识合理就认为支持",
-            en: "Mark it supported if it seems plausible",
-          },
-          {
-            value: "insufficient",
-            title: "选择“画面信息不足”",
-            en: "Choose “Insufficient visual evidence”",
-          },
-          {
-            value: "guess",
-            title: "按最常见的情况猜测",
-            en: "Guess the most common situation",
-          },
-        ]}
-      />
-      <Button
-        disabled={!choice || busy}
-        onClick={async () => {
-          setBusy(true);
-          try {
-            const r = await api("qualify", { choice });
-            if (!r.qualified)
-              setError(
-                r.remaining
-                  ? "请重读说明：不能用常识补充画面里没有的证据。"
-                  : "本次说明检查未通过，感谢你的参与。",
-              );
-            await refresh();
-          } catch (e) {
-            setError((e as Error).message);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        {t("开始正式评价", "Start reviewing")}
-        <ArrowRight size={16} />
-      </Button>
-    </div>
-  );
-}
 export function ParticipantStudy() {
   const { t, language } = useLanguage(),
     [config, setConfig] = useState<Any>(null),
@@ -1294,6 +1103,10 @@ export function ParticipantStudy() {
     currentId = useRef("");
   const refresh = useCallback(async () => {
     let s = await api("me");
+    if (s.participant.status === "training" && !s.participant.qualified_at) {
+      await api("begin", {});
+      s = await api("me");
+    }
     if (s.participant.profile.protocol !== "blind-v1") {
       await api("blind/start", {});
       s = await api("me");
@@ -1508,8 +1321,6 @@ export function ParticipantStudy() {
         </button>
       </div>
     );
-  else if (!state.participant.qualified_at)
-    content = <Training state={state} refresh={refresh} setError={setError} />;
   else if (state.assignment) {
     const id = state.assignment.id;
     let draft = state.assignment.draft;
@@ -1519,7 +1330,7 @@ export function ParticipantStudy() {
     } catch {}
     content = (
       <div className="review-wrap">
-        <Steps active={3} />
+        <Steps active={2} />
         <div className="session-strip">
           <span>
             {t("已完成", "Reviewed")} {state.progress.done}{" "}
