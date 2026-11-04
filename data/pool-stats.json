@@ -1,0 +1,77 @@
+{
+  "definition": "Counts clips containing the native GT label other, not sampled distractor appearances",
+  "games": {
+    "aoe2": {
+      "main": 40,
+      "other_main": 5,
+      "total": 44,
+      "other_total": 6
+    },
+    "wc3": {
+      "main": 40,
+      "other_main": 5,
+      "total": 44,
+      "other_total": 5
+    },
+    "pubg": {
+      "main": 40,
+      "other_main": 0,
+      "total": 44,
+      "other_total": 0
+    },
+    "cs": {
+      "main": 40,
+      "other_main": 8,
+      "total": 44,
+      "other_total": 10
+    },
+    "valorant": {
+      "main": 40,
+      "other_main": 6,
+      "total": 44,
+      "other_total": 6
+    },
+    "lol": {
+      "main": 40,
+      "other_main": 3,
+      "total": 44,
+      "other_total": 3
+    },
+    "sc2": {
+      "main": 40,
+      "other_main": 2,
+      "total": 44,
+      "other_total": 2
+    },
+    "dota": {
+      "main": 40,
+      "other_main": 3,
+      "total": 44,
+      "other_total": 4
+    },
+    "rl": {
+      "main": 40,
+      "other_main": 1,
+      "total": 44,
+      "other_total": 1
+    },
+    "apex": {
+      "main": 40,
+      "other_main": 4,
+      "total": 44,
+      "other_total": 4
+    },
+    "overwatch": {
+      "main": 40,
+      "other_main": 1,
+      "total": 44,
+      "other_total": 1
+    },
+    "naraka": {
+      "main": 40,
+      "other_main": 1,
+      "total": 44,
+      "other_total": 1
+    }
+  }
+}

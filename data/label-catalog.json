@@ -1294,5 +1294,112 @@
       "definition_en": "Use or commit an ultimate ability for a tactical purpose.",
       "definition_zh": "为战术目标使用或投入终极技能。"
     }
+  ],
+  "naraka": [
+    {
+      "id": "attack",
+      "en": "attack",
+      "zh": "进攻",
+      "definition_en": "Attack opposing players, units, or structures to damage or eliminate them.",
+      "definition_zh": "进攻敌方玩家、单位或建筑，以造成伤害或消灭目标。"
+    },
+    {
+      "id": "bait",
+      "en": "bait",
+      "zh": "诱导交战",
+      "definition_en": "Encourage an opponent to commit into a prepared response.",
+      "definition_zh": "诱使对手采取行动，再利用预备的应对进行反制。"
+    },
+    {
+      "id": "control_zone",
+      "en": "control_zone",
+      "zh": "控制区域",
+      "definition_en": "Secure or deny access to a tactically important area or resource point.",
+      "definition_zh": "占据或限制对手进入重要区域或资源点。"
+    },
+    {
+      "id": "defend",
+      "en": "defend",
+      "zh": "防守",
+      "definition_en": "Protect a position, objective, unit, or teammate against an opposing attack.",
+      "definition_zh": "抵御对方进攻，保护位置、目标、单位或队友。"
+    },
+    {
+      "id": "escape",
+      "en": "escape",
+      "zh": "逃脱",
+      "definition_en": "Avoid an immediate threat and reach safety.",
+      "definition_zh": "摆脱当前威胁，进入相对安全的位置。"
+    },
+    {
+      "id": "heal",
+      "en": "heal",
+      "zh": "恢复状态",
+      "definition_en": "Restore health or shields before further action.",
+      "definition_zh": "恢复生命值或护盾，为后续行动做准备。"
+    },
+    {
+      "id": "landing_fight",
+      "en": "landing_fight",
+      "zh": "落地交战",
+      "definition_en": "Fight opponents immediately after landing to contest the starting area.",
+      "definition_zh": "落地后立即与对手交战，争夺初始区域。"
+    },
+    {
+      "id": "loot",
+      "en": "loot",
+      "zh": "搜刮物资",
+      "definition_en": "Search for and collect equipment or supplies to improve resources.",
+      "definition_zh": "搜索并收集装备或补给，改善资源状况。"
+    },
+    {
+      "id": "other",
+      "en": "other",
+      "zh": "其他目标",
+      "definition_en": "A tactical goal outside the listed native categories; not a substitute for missing visual evidence.",
+      "definition_zh": "不属于现有原生类别的战术目标；不能用来表示看不清或无法判断。"
+    },
+    {
+      "id": "pick",
+      "en": "pick",
+      "zh": "抓单击杀",
+      "definition_en": "Isolate and eliminate an opposing player outside a full team fight.",
+      "definition_zh": "在大规模团战之外，抓住落单或暴露的敌方玩家进行击杀。"
+    },
+    {
+      "id": "pick_up",
+      "en": "pick_up",
+      "zh": "拾取物资",
+      "definition_en": "Pick up equipment, items, or resources from the environment.",
+      "definition_zh": "从环境中拾取装备、道具或资源。"
+    },
+    {
+      "id": "retreat",
+      "en": "retreat",
+      "zh": "撤退",
+      "definition_en": "Withdraw from a dangerous engagement or position.",
+      "definition_zh": "从危险的交战或位置中后撤。"
+    },
+    {
+      "id": "revive",
+      "en": "revive",
+      "zh": "复活队友",
+      "definition_en": "Revive a fallen teammate or bring an eliminated teammate back into play.",
+      "definition_zh": "救起倒地队友，或使被淘汰队友返回比赛。"
+    },
+    {
+      "id": "rotate",
+      "en": "rotate",
+      "zh": "转移位置",
+      "definition_en": "Move to another area to change positioning, support, or objective pressure.",
+      "definition_zh": "转移到其他区域，以调整站位、支援或目标压力。"
+    },
+    {
+      "id": "scan",
+      "en": "scan",
+      "zh": "搜索敌情",
+      "definition_en": "Search for opponents or information about their positions.",
+      "definition_zh": "搜索对手，获取其位置或行动信息。"
+    }
   ]
 }

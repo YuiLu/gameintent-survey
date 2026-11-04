@@ -60,7 +60,7 @@ test('mixed-game reservations stay within five reviewers under concurrent claims
  const pg=new PGlite();await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
  const db=createDatabase({query:async(s,v)=>(await pg.query(s,v)).rows,transaction:fn=>pg.transaction(tx=>fn(async(s,v)=>(await tx.query(s,v)).rows))});
  await pg.query("INSERT INTO survey.studies(id,status,config,created_at) VALUES('s','live','{}','now')");
- for(let i=0;i<10;i++)await pg.query('INSERT INTO survey.questions(id,study_id,game,kind,payload,digest,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)',['q'+i,'s',i<4||i>=8?'a':'b',i<8?'main':i===8?'control_positive':'control_negative','{}','test','now']);
+ for(let i=0;i<10;i++)await pg.query('INSERT INTO survey.questions(id,study_id,game,kind,payload,digest,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)',['q'+i,'s',i<4||i>=8?'a':'b',i<8?'main':i===8?'control_positive':'control_negative','{"media_verified":true}','test','now']);
  for(let i=0;i<8;i++)await pg.query('INSERT INTO survey.participants(id,game,resume_hash,profile,status,created_at) VALUES($1,$2,$3,$4,$5,$6)',['p'+i,'a','p'+i,JSON.stringify({games:['a','b'],flexible:true}),'training','now']);
  const claims=await Promise.all(Array.from({length:8},(_,i)=>db.flexiblePanel('p'+i,'s','now')));assert.equal(claims.filter(n=>n>0).length,5);
  const counts=(await pg.query("SELECT a.question_id,COUNT(*) AS n FROM survey.assignments a JOIN survey.participants p ON p.panel_id=a.panel_id WHERE a.trial_type='main' GROUP BY a.question_id")).rows;

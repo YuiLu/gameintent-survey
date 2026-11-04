@@ -12,6 +12,7 @@ export const GAMES = [
  {id:'rl',en:'Rocket League',zh:'火箭联盟',genre:'SPORT',size:4690,color:'#7798ab'},
  {id:'apex',en:'Apex Legends',zh:'Apex 英雄',genre:'BR',size:2385,color:'#b37872'},
  {id:'overwatch',en:'Overwatch',zh:'守望先锋',genre:'FPS',size:1427,color:'#c49d64'},
+ {id:'naraka',en:'NARAKA: BLADEPOINT',zh:'永劫无间',genre:'BR',size:2369,color:'#9e7669'},
 ] as const;
 export const LABEL_OPTIONS = [
  {value:'supported',title:'有明确画面支持',en:'Clearly supported',detail:'目标符合画面。其他意图同时成立，不影响这一选择。'},

@@ -125,3 +125,8 @@ wc3|creep|练级打野|Defeat neutral creep camps for experience, resources, or 
 wc3|creep_jack|抓练级|Attack an opponent while they are fighting a neutral creep camp.|在对手攻击中立野怪时突袭其部队。
 wc3|item_pickup|拾取物品|Collect a dropped or available item.|拾取掉落或可获取的物品。
 wc3|item_shop|商店购买|Purchase useful items from a shop.|在商店购买所需物品。
+naraka|pick_up|拾取物资|Pick up equipment, items, or resources from the environment.|从环境中拾取装备、道具或资源。
+naraka|control_zone|控制区域|Secure or deny access to a tactically important area or resource point.|占据或限制对手进入重要区域或资源点。
+naraka|revive|复活队友|Revive a fallen teammate or bring an eliminated teammate back into play.|救起倒地队友，或使被淘汰队友返回比赛。
+naraka|loot|搜刮物资|Search for and collect equipment or supplies to improve resources.|搜索并收集装备或补给，改善资源状况。
+naraka|landing_fight|落地交战|Fight opponents immediately after landing to contest the starting area.|落地后立即与对手交战，争夺初始区域。

@@ -744,7 +744,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
                     <small>游戏覆盖</small>
                     <strong>
                       {result.coverage.covered_games}
-                      <em>/11</em>
+                      <em>/{GAMES.length}</em>
                     </strong>
                     <span>
                       {result.status === "complete"
@@ -832,7 +832,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
                     </table>
                   </div>
                   <p className="analysis-note">
-                    区间为95%置信区间。信息不足与不熟悉的有效票保留在分母；所有11款游戏尚未覆盖时不输出完整总体值。支持率不等于人类盲测准确率。
+                    区间为95%置信区间。信息不足与不熟悉的有效票保留在分母；所有游戏尚未覆盖时不输出完整总体值。支持率不等于人类盲测准确率。
                   </p>
                 </div>
                 <div className="admin-card">
@@ -840,8 +840,8 @@ function Researcher({ onHome }: { onHome: () => void }) {
                   {result.four_choice && <>
                     <h2>四选一意图组合</h2>
                     <p>独立评价 {result.four_choice.ratings} 份，完整五人评价 {result.four_choice.complete_clips} 段。以下统计与原标注组合的一致率；不与全标签盲选 F1 混合。选择四项时的随机一致率为 25%。画面不足／不熟悉计入总体分母。</p>
-                    <div className="table-scroll"><table><thead><tr><th>游戏</th><th>完整视频</th><th>与原标注一致</th><th>作答后的一致率</th><th>多数人一致</th><th>无法判断</th><th>描述支持</th></tr></thead><tbody>
-                      {Object.entries(result.four_choice.games).map(([game,r]:Any)=><tr key={game}><td>{game}</td><td>{r.complete_clips}</td><td>{pct(r.reference_agreement)}</td><td>{pct(r.agreement_given_selection)}</td><td>{pct(r.majority_reference_agreement)}</td><td>{pct(r.abstention_rate)}</td><td>{pct(r.description_grounding)}</td></tr>)}
+                    <div className="table-scroll"><table><thead><tr><th>游戏</th><th>完整视频</th><th>与原标注一致</th><th>作答后的一致率</th><th>多数人一致</th><th>无法判断</th><th>描述支持</th><th>原标签支持</th></tr></thead><tbody>
+                      {Object.entries(result.four_choice.games).map(([game,r]:Any)=><tr key={game}><td>{game}</td><td>{r.complete_clips}</td><td>{pct(r.reference_agreement)}</td><td>{pct(r.agreement_given_selection)}</td><td>{pct(r.majority_reference_agreement)}</td><td>{pct(r.abstention_rate)}</td><td>{pct(r.description_grounding)}</td><td>{pct(r.label_support_rate)}</td></tr>)}
                     </tbody></table></div>
                   </>}
                   <h2>全标签盲选与自动标注</h2>{result.blind&&<><p>独立盲选评价 {result.blind.ratings} 份；已有曝光记录 {result.blind.excluded_preexposed_ratings} 份不进入 F1。以下以五人中至少三人选择的标签作参考，评价自动标注；无共识视频单独统计。</p><div className="table-scroll"><table><thead><tr><th>游戏</th><th>可评分视频</th><th>无共识</th><th>Precision</th><th>Recall</th><th>Micro-F1</th><th>Macro-F1</th><th>集合全对</th></tr></thead><tbody>{Object.entries(result.blind.games).map(([game,r]:Any)=><tr key={game}><td>{game}</td><td>{r.scored_clips}</td><td>{r.no_consensus_clips}</td><td>{pct(r.precision)}</td><td>{pct(r.recall)}</td><td>{pct(r.micro_f1)}</td><td>{pct(r.macro_f1)}</td><td>{pct(r.exact_match)}</td></tr>)}</tbody></table></div><p>画面不足／不熟悉比例：{pct(result.blind.abstention_rate)}；描述依据充分比例：{pct(result.blind.description_grounding)}</p></>}<h2>旧题型一致性与诊断</h2>

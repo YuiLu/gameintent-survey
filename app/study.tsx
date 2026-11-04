@@ -448,6 +448,7 @@ export function Evaluation({
     [status, setStatus] = useState(
       question.blind_response?.status || draft?.blind_status || "selected",
     ),
+    [labelSupport, setLabelSupport] = useState(draft?.label_support || ""),
     [description, setDescription] = useState(draft?.description_support || ""),
     [comment, setComment] = useState(draft?.comment || ""),
     [loaded, setLoaded] = useState(false),
@@ -467,13 +468,22 @@ export function Evaluation({
         ? { choice_mode: "blind-four-v1", blind_choice_id: choiceId }
         : {}),
       blind_status: status,
+      label_support: labelSupport,
       description_support: description,
       comment,
     };
     if (draftKey) localStorage.setItem(draftKey, JSON.stringify(answer));
     const timer = setTimeout(() => onDraft?.(answer), 600);
     return () => clearTimeout(timer);
-  }, [selected, choiceId, status, description, comment, draftKey]);
+  }, [
+    selected,
+    choiceId,
+    status,
+    labelSupport,
+    description,
+    comment,
+    draftKey,
+  ]);
   async function lock() {
     setLocking(true);
     setError("");
@@ -577,10 +587,7 @@ export function Evaluation({
           <section className="question-card">
             <h2>
               {locked
-                ? t(
-                    "意图描述是否得到画面支持？",
-                    "Is the intent description visually grounded?",
-                  )
+                ? t("评价原标注", "Review the original annotation")
                 : t(
                     "画面中的对象正在试图做什么？",
                     "What is the target trying to do?",
@@ -602,15 +609,55 @@ export function Evaluation({
                       "Select all goals supported by the video. Labels and definitions are bilingual.",
                     )}
             </p>
+            {locked && (
+              <section className="revealed-label-rating">
+                <h2>
+                  {t(
+                    "原标签是否得到画面支持？",
+                    "Are the original labels supported by the video?",
+                  )}
+                </h2>
+                <Options
+                  name="label-support"
+                  items={LABEL_OPTIONS}
+                  value={labelSupport}
+                  onChange={setLabelSupport}
+                />
+              </section>
+            )}
             {locked ? (
-              <Options
-                name="description"
-                items={DESCRIPTION_OPTIONS}
-                value={description}
-                onChange={setDescription}
-              />
+              <>
+                <h2>
+                  {t(
+                    "意图描述是否得到画面支持？",
+                    "Is the intent description visually grounded?",
+                  )}
+                </h2>
+                <Options
+                  name="description"
+                  items={DESCRIPTION_OPTIONS}
+                  value={description}
+                  onChange={setDescription}
+                />
+              </>
             ) : (
               <>
+                {!(fourChoice
+                  ? q.choice_options?.length
+                  : q.label_choices?.length) && (
+                  <Notice error>
+                    {t(
+                      "意图候选加载不完整，请点击重新同步。",
+                      "Intent choices are incomplete. Please resync.",
+                    )}
+                    <button
+                      className="text-button"
+                      onClick={() => window.location.reload()}
+                    >
+                      {t("重新同步", "Resync")}
+                    </button>
+                  </Notice>
+                )}
                 {fourChoice ? (
                   <div
                     className="options blind-options four-choice-options"
@@ -749,15 +796,16 @@ export function Evaluation({
                 busy ||
                 locking ||
                 (!locked &&
-                  (!loaded ||
+                  ((fourChoice ? q.choice_options?.length!==4 : !q.label_choices?.length) || !loaded ||
                     seconds < 1 ||
                     (status === "selected" &&
                       (fourChoice ? !choiceId : !selected.length)))) ||
-                (locked && !description)
+                (locked && (!description || !labelSupport))
               }
               onClick={() =>
                 locked
                   ? onSubmit({
+                      label_support: labelSupport,
                       description_support: description,
                       comment,
                       video_loaded: true,
@@ -809,19 +857,22 @@ export function Entry({
   onStart,
   busy,
   error,
+  initialProfile,
 }: {
+  initialProfile?: Any;
   config: Any;
   onStart: (v: Any) => void;
   busy: boolean;
   error: string;
 }) {
   const { t, language } = useLanguage(),
-    [page, setPage] = useState(0),
-    [games, setGames] = useState<string[]>([]),
-    [extraNaraka, setExtraNaraka] = useState(false),
-    [familiarity, setFamiliarity] = useState(3),
-    [experience, setExperience] = useState<string[]>([]),
-    [consent, setConsent] = useState(false);
+    [page, setPage] = useState(initialProfile ? 1 : 0),
+    [games, setGames] = useState<string[]>(initialProfile?.games || []),
+    [familiarity, setFamiliarity] = useState(initialProfile?.familiarity || 3),
+    [experience, setExperience] = useState<string[]>(
+      initialProfile?.experience || [],
+    ),
+    [consent, setConsent] = useState(!!initialProfile);
   const open = ["live", "pilot"].includes(config?.status);
   if (page === 0)
     return (
@@ -1026,21 +1077,6 @@ export function Entry({
             </div>
           </div>
         )}
-        {games.length > 0 && (
-          <label className="similarity-familiarity">
-            <input
-              type="checkbox"
-              checked={extraNaraka}
-              onChange={(e) => setExtraNaraka(e.target.checked)}
-            />
-            <span>
-              {t(
-                "我也熟悉端游《永劫无间》的竞技生存模式（仅用于游戏机制比较）",
-                "I also know NARAKA: BLADEPOINT's competitive battle royale mode (for game comparisons only)",
-              )}
-            </span>
-          </label>
-        )}
         <div className="consent-box">
           <p>
             {language === "zh"
@@ -1094,10 +1130,7 @@ export function Entry({
             onClick={() =>
               onStart({
                 games,
-                similarity_games: [
-                  ...games,
-                  ...(extraNaraka ? ["naraka"] : []),
-                ],
+                similarity_games: games,
                 familiarity,
                 experience,
                 consent,
@@ -1304,6 +1337,7 @@ export function ParticipantStudy() {
     [error, setError] = useState(""),
     [saved, setSaved] = useState(""),
     [paused, setPaused] = useState(false),
+    [editingGames, setEditingGames] = useState(false),
     queues = useRef<Record<string, Promise<void>>>({}),
     currentId = useRef("");
   const refresh = useCallback(async () => {
@@ -1316,8 +1350,18 @@ export function ParticipantStudy() {
       await api("blind/start", {});
       s = await api("me");
     }
-    if (["training", "active"].includes(s.participant.status))
+    if (["training", "active"].includes(s.participant.status)) {
+      if (
+        s.assignment &&
+        !s.assignment.question.blind_locked &&
+        !s.assignment.question.choice_options?.length &&
+        !s.assignment.question.label_choices?.length
+      ) {
+        await api("blind/start", {});
+        s = await api("me");
+      }
       s.similarity = await api("similarity");
+    }
     setState(s);
     currentId.current = s.assignment?.id || "";
   }, []);
@@ -1332,6 +1376,11 @@ export function ParticipantStudy() {
       if (live) {
         if (results[0].status === "rejected")
           setError(String(results[0].reason?.message || ""));
+        else if (
+          results[1].status === "rejected" &&
+          !String(results[1].reason?.message || "").includes("请先进入研究")
+        )
+          setError(String(results[1].reason?.message || ""));
         setLoading(false);
       }
     });
@@ -1345,6 +1394,7 @@ export function ParticipantStudy() {
     try {
       await api("enroll", { ...data, protocol: "blind-v1" });
       await refresh();
+      setEditingGames(false);
       window.scrollTo(0, 0);
     } catch (e) {
       setError((e as Error).message);
@@ -1459,6 +1509,16 @@ export function ParticipantStudy() {
   else if (!state)
     content = (
       <Entry config={config} onStart={start} busy={busy} error={error} />
+    );
+  else if (editingGames)
+    content = (
+      <Entry
+        config={config}
+        initialProfile={state.participant.profile}
+        onStart={start}
+        busy={busy}
+        error={error}
+      />
     );
   else if (state.participant.status === "completed")
     content = (
@@ -1632,6 +1692,13 @@ export function ParticipantStudy() {
       {state && error && (
         <div className="global-error">
           <Notice error>{errorText(error, language)}</Notice>
+        </div>
+      )}
+      {state?.participant.status === "active" && !editingGames && (
+        <div className="global-error">
+          <button className="text-button" onClick={() => setEditingGames(true)}>
+            {t("修改熟悉的游戏", "Update familiar games")}
+          </button>
         </div>
       )}
       {content}
