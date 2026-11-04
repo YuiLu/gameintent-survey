@@ -836,6 +836,7 @@ function Researcher({ onHome }: { onHome: () => void }) {
                   </p>
                 </div>
                 <div className="admin-card">
+                  {result.game_similarity && <><h2>游戏战术决策相似度</h2><p>正式阶段已提交 {result.game_similarity.participants} 人。1–5分；区间按参与者重采样。抽样优先机制共性与差异并存的组合，不代表对所有游戏对的均匀调查。</p><div className="table-scroll"><table><thead><tr><th>游戏对</th><th>有效评分</th><th>均值</th><th>95% CI</th><th>无法判断</th><th>跳过</th></tr></thead><tbody>{Object.entries(result.game_similarity.pairs).map(([key,r]:Any)=><tr key={key}><td>{r.games.join(" / ")}</td><td>{r.n}</td><td>{r.mean?.toFixed(2)??"—"}</td><td>{r.ci95?r.ci95.map((n:number)=>n.toFixed(2)).join("–"):"—"}</td><td>{r.unable}</td><td>{r.skipped}</td></tr>)}</tbody></table></div><a className="text-button" href="/api/admin/export?format=similarity_csv">游戏对评分 CSV</a></>}
                   {result.four_choice && <>
                     <h2>四选一意图组合</h2>
                     <p>独立评价 {result.four_choice.ratings} 份，完整五人评价 {result.four_choice.complete_clips} 段。以下统计与原标注组合的一致率；不与全标签盲选 F1 混合。选择四项时的随机一致率为 25%。画面不足／不熟悉计入总体分母。</p>

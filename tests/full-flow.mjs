@@ -71,3 +71,14 @@ assert.equal((await call('me',undefined,dh)).data.progress.done,1);
 assert.equal((await call('withdraw',{},dh)).status,200);
 const withdrawnExport=(await call('admin/export',undefined,ADMIN)).data;assert.equal(withdrawnExport.responses.filter(r=>r.participant_id===ds.participant.id).length,0);assert.equal(withdrawnExport.participants.find(p=>p.id===ds.participant.id).status,'withdrawn');
 console.log('PASS: direct start without practice, idempotent allocation, selected-option autosave, immediate submission persistence and withdrawal.');
+
+const simUser=await call('enroll',{games:['cs','pubg','apex'],similarity_games:['cs','pubg','apex','naraka'],protocol:'blind-v1',familiarity:3,experience:['watch'],consent:true});const simh={Cookie:simUser.cookie};await call('begin',{},simh);
+const sim=(await call('similarity',undefined,simh)).data;assert.equal(sim.pairs.length,3);assert.deepEqual((await call('similarity',undefined,simh)).data.pairs,sim.pairs);
+const simAnswers=sim.pairs.map((p,i)=>({key:p.key,status:i===2?'unable':'rated',score:i===2?null:4}));
+assert.equal((await call('similarity',{answers:simAnswers,final:false},simh)).status,200);assert.equal((await call('similarity',undefined,simh)).data.done,false);assert.deepEqual((await call('similarity',undefined,simh)).data.draft_responses.map(a=>a.score),[4,4,null]);
+const finalized=await call('similarity',{answers:simAnswers,final:true},simh);assert.equal(finalized.data.done,true);
+assert.deepEqual((await call('similarity',{answers:simAnswers.map(a=>({...a,status:'rated',score:1})),final:true},simh)).data.responses,finalized.data.responses);
+assert.equal((await call('me',undefined,simh)).data.progress.done,0,'Similarity never counts toward video completion');
+assert.equal((await call('admin/analyze',{},ADMIN)).data.result.game_similarity.participants,0,'Pilot similarity is excluded from formal metrics');
+await call('withdraw',{},simh);const sexport=(await call('admin/export',undefined,ADMIN)).data;assert.deepEqual(sexport.participants.find(p=>p.id===simUser.data.participant_id).profile,{});
+console.log('PASS: similarity assignment, familiar-only sampling, draft restoration, final immutability, pilot exclusion and withdrawal.');

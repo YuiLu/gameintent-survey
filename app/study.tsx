@@ -77,7 +77,8 @@ function errorText(message: string, language: Language) {
   const known: Record<string, string> = {
     "研究尚未开放正式参与，可先体验演示。":
       "The study is not open for participation yet.",
-    "所选游戏当前名额已满，请稍后再试。": "The selected games are currently full. Please try again later.",
+    "所选游戏当前名额已满，请稍后再试。":
+      "The selected games are currently full. Please try again later.",
     "这款游戏目前名额已满，请稍后再试。":
       "All places for this game are currently filled. Please try again later.",
     "当前名额刚被分配完。你的练习已保存，可稍后再试。":
@@ -817,6 +818,7 @@ export function Entry({
   const { t, language } = useLanguage(),
     [page, setPage] = useState(0),
     [games, setGames] = useState<string[]>([]),
+    [extraNaraka, setExtraNaraka] = useState(false),
     [familiarity, setFamiliarity] = useState(3),
     [experience, setExperience] = useState<string[]>([]),
     [consent, setConsent] = useState(false);
@@ -878,7 +880,10 @@ export function Entry({
                 ],
                 [
                   t("观看比赛片段", "Watch a match clip"),
-                  t("仅依据画面判断，可暂停和重播。", "Judge only what the video supports. Pause or replay as needed."),
+                  t(
+                    "仅依据画面判断，可暂停和重播。",
+                    "Judge only what the video supports. Pause or replay as needed.",
+                  ),
                 ],
                 [
                   t("逐页完成评价", "Review one page at a time"),
@@ -1021,6 +1026,21 @@ export function Entry({
             </div>
           </div>
         )}
+        {games.length > 0 && (
+          <label className="similarity-familiarity">
+            <input
+              type="checkbox"
+              checked={extraNaraka}
+              onChange={(e) => setExtraNaraka(e.target.checked)}
+            />
+            <span>
+              {t(
+                "我也熟悉端游《永劫无间》的竞技生存模式（仅用于游戏机制比较）",
+                "I also know NARAKA: BLADEPOINT's competitive battle royale mode (for game comparisons only)",
+              )}
+            </span>
+          </label>
+        )}
         <div className="consent-box">
           <p>
             {language === "zh"
@@ -1074,6 +1094,10 @@ export function Entry({
             onClick={() =>
               onStart({
                 games,
+                similarity_games: [
+                  ...games,
+                  ...(extraNaraka ? ["naraka"] : []),
+                ],
                 familiarity,
                 experience,
                 consent,
@@ -1087,6 +1111,187 @@ export function Entry({
           </Button>
         </div>
       </section>
+    </main>
+  );
+}
+export function GameSimilarity({
+  participantId,
+  value,
+  onComplete,
+}: {
+  participantId: string;
+  value: Any;
+  onComplete: () => Promise<void>;
+}) {
+  const { t, language } = useLanguage();
+  const cacheKey = "gi-draft-similarity-" + participantId;
+  const [answers, setAnswers] = useState<Any[]>(() => {
+    try {
+      const local = JSON.parse(localStorage.getItem(cacheKey) || "null");
+      if (
+        local &&
+        value.pairs.every((p: Any) => local.some((a: Any) => a.key === p.key))
+      )
+        return local;
+    } catch {}
+    return (
+      value.draft_responses ||
+      value.pairs.map((p: Any) => ({
+        key: p.key,
+        status: "skipped",
+        score: null,
+      }))
+    );
+  });
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  const names = (id: string) =>
+    id === "naraka"
+      ? t("永劫无间 · 竞技生存", "NARAKA · battle royale")
+      : GAMES.find((g) => g.id === id)?.[language === "zh" ? "zh" : "en"] || id;
+  useEffect(() => {
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify(answers));
+    } catch {}
+    const timer = setTimeout(
+      () =>
+        api("similarity", { answers, final: false })
+          .then(() => setError(""))
+          .catch(() =>
+            setError(
+              t(
+                "暂未同步，当前选择已保存在本机。继续时将重试。",
+                "Not synced yet. Choices are saved on this device; continuing will retry.",
+              ),
+            ),
+          ),
+      600,
+    );
+    return () => clearTimeout(timer);
+  }, [answers]);
+  async function finish(skip = false) {
+    setBusy(true);
+    setError("");
+    try {
+      await api("similarity", {
+        answers: skip
+          ? value.pairs.map((p: Any) => ({
+              key: p.key,
+              status: "skipped",
+              score: null,
+            }))
+          : answers,
+        final: true,
+      });
+      try {
+        localStorage.removeItem(cacheKey);
+      } catch {}
+      await onComplete();
+      window.scrollTo(0, 0);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <main className="welcome similarity-page">
+      <span className="eyebrow">
+        {t("游戏机制比较 · 可跳过", "GAME COMPARISON · OPTIONAL")}
+      </span>
+      <h1>
+        {t(
+          "这些游戏的战术决策有多相似？",
+          "How similar are their tactical decisions?",
+        )}
+      </h1>
+      <p>
+        {t(
+          "根据你对相应竞技模式的了解，综合考虑行动目标、位置与路线选择、资源取舍和交战时机。请依据决策需求判断，而非仅看画风或题材。",
+          "Based on the competitive modes you know, consider action goals, positioning and routes, resource trade-offs, and engagement timing. Judge decision-making demands rather than just visual style or theme.",
+        )}
+      </p>
+      {value.pairs.map((pair: Any) => {
+        const answer = answers.find((a) => a.key === pair.key);
+        return (
+          <section className="question-card" key={pair.key}>
+            <h2>
+              {names(pair.games[0])}
+              <span className="similarity-versus"> × </span>
+              {names(pair.games[1])}
+            </h2>
+            <div
+              className="similarity-scale"
+              role="radiogroup"
+              aria-label={pair.games.map(names).join(" / ")}
+            >
+              {[1, 2, 3, 4, 5, "unable"].map((score: Any, i) => {
+                const selected =
+                  score === "unable"
+                    ? answer?.status === "unable"
+                    : answer?.status === "rated" && answer.score === score;
+                const zh = [
+                    "非常不相似",
+                    "较不相似",
+                    "一般",
+                    "较相似",
+                    "非常相似",
+                    "无法判断",
+                  ],
+                  en = [
+                    "Very dissimilar",
+                    "Dissimilar",
+                    "Neutral",
+                    "Similar",
+                    "Very similar",
+                    "Cannot judge",
+                  ];
+                return (
+                  <label key={score} className={selected ? "selected" : ""}>
+                    <input
+                      type="radio"
+                      name={"similarity-" + pair.key}
+                      checked={selected}
+                      onChange={() =>
+                        setAnswers((old) =>
+                          old.map((a) =>
+                            a.key === pair.key
+                              ? {
+                                  key: a.key,
+                                  status:
+                                    score === "unable" ? "unable" : "rated",
+                                  score: score === "unable" ? null : score,
+                                }
+                              : a,
+                          ),
+                        )
+                      }
+                    />
+                    <span>
+                      {i < 5 && <b>{score}</b>}
+                      {t(zh[i], en[i])}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+      {error && <Notice error>{error}</Notice>}
+      <div className="submit-row">
+        <Button disabled={busy} onClick={() => finish()}>
+          {t("保存并开始视频评价", "Save and start video reviews")}
+          <ArrowRight size={16} />
+        </Button>
+        <button
+          className="text-button"
+          disabled={busy}
+          onClick={() => finish(true)}
+        >
+          {t("跳过此页", "Skip this page")}
+        </button>
+      </div>
     </main>
   );
 }
@@ -1111,6 +1316,8 @@ export function ParticipantStudy() {
       await api("blind/start", {});
       s = await api("me");
     }
+    if (["training", "active"].includes(s.participant.status))
+      s.similarity = await api("similarity");
     setState(s);
     currentId.current = s.assignment?.id || "";
   }, []);
@@ -1228,7 +1435,10 @@ export function ParticipantStudy() {
     setBusy(true);
     try {
       await api("withdraw", {});
-      try { for (const key of Object.keys(localStorage)) if (key.startsWith("gi-draft-")) localStorage.removeItem(key); } catch {}
+      try {
+        for (const key of Object.keys(localStorage))
+          if (key.startsWith("gi-draft-")) localStorage.removeItem(key);
+      } catch {}
       setState(null);
       setPaused(false);
       setError("");
@@ -1292,6 +1502,15 @@ export function ParticipantStudy() {
           {state.study.config.contact}
         </p>
       </div>
+    );
+  else if (state.similarity && !state.similarity.done)
+    content = (
+      <GameSimilarity
+        key={state.participant.id}
+        participantId={state.participant.id}
+        value={state.similarity}
+        onComplete={refresh}
+      />
     );
   else if (paused)
     content = (

@@ -11,7 +11,7 @@
     "build": "next build --webpack",
     "build:esa": "node scripts/build-esa.mjs",
     "start": "next start",
-    "test": "node --test tests/analysis.test.mjs tests/cos.test.mjs tests/database.test.mjs tests/errors.test.mjs tests/database-tls.test.mjs tests/gateway.test.mjs",
+    "test": "node --test tests/analysis.test.mjs tests/cos.test.mjs tests/database.test.mjs tests/errors.test.mjs tests/database-tls.test.mjs tests/gateway.test.mjs tests/game-similarity.test.mjs",
     "typecheck": "tsc --noEmit",
     "test:flow": "tsx tests/run-flow.ts",
     "test:flow:esa": "STUDY_TEST_GATEWAY=1 tsx tests/run-flow.ts",
