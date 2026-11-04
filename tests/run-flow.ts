@@ -39,5 +39,5 @@ const server=createServer(async(req,res)=>{
   }catch{res.writeHead(500);res.end('Test harness failed');}
 });
 await new Promise<void>(resolve=>server.listen(5180,'127.0.0.1',resolve));
-try{const code=await new Promise(resolve=>{const child=spawn(process.execPath,['tests/full-flow.mjs'],{stdio:'inherit'});child.on('exit',resolve)});if(code!==0)process.exitCode=1;}
+try{const code=await new Promise(resolve=>{const child=spawn(process.execPath,['tests/full-flow.mjs'],{stdio:'inherit'});child.on('exit',resolve)});if(code!==0)process.exitCode=1;const late=await pg.query<{n:number}>("SELECT COUNT(*) AS n FROM survey.drafts d JOIN survey.participants p ON p.id=d.participant_id WHERE p.status='withdrawn'");assert.equal(Number(late.rows[0].n),0,'Withdrawn participants must have no surviving drafts');}
 finally{server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));await pg.close();}

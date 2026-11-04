@@ -1228,6 +1228,7 @@ export function ParticipantStudy() {
     setBusy(true);
     try {
       await api("withdraw", {});
+      try { for (const key of Object.keys(localStorage)) if (key.startsWith("gi-draft-")) localStorage.removeItem(key); } catch {}
       setState(null);
       setPaused(false);
       setError("");
