@@ -1159,6 +1159,7 @@ export function GameSimilarity({
   const { t, language } = useLanguage();
   const cacheKey = "gi-draft-similarity-" + participantId;
   const [answers, setAnswers] = useState<Any[]>(() => {
+    if(value.done && value.responses)return value.responses;
     try {
       const local = JSON.parse(localStorage.getItem(cacheKey) || "null");
       if (
@@ -1168,7 +1169,7 @@ export function GameSimilarity({
         return local;
     } catch {}
     return (
-      value.draft_responses ||
+      value.responses || value.draft_responses ||
       value.pairs.map((p: Any) => ({
         key: p.key,
         status: "skipped",
@@ -1183,6 +1184,7 @@ export function GameSimilarity({
       ? t("永劫无间 · 竞技生存", "NARAKA · battle royale")
       : GAMES.find((g) => g.id === id)?.[language === "zh" ? "zh" : "en"] || id;
   useEffect(() => {
+    if(value.done)return;
     try {
       localStorage.setItem(cacheKey, JSON.stringify(answers));
     } catch {}
@@ -1203,6 +1205,7 @@ export function GameSimilarity({
     return () => clearTimeout(timer);
   }, [answers]);
   async function finish(skip = false) {
+    if(value.done){await onComplete();return;}
     setBusy(true);
     setError("");
     try {
@@ -1244,6 +1247,8 @@ export function GameSimilarity({
           "Based on the competitive modes you know, consider action goals, positioning and routes, resource trade-offs, and engagement timing. Judge decision-making demands rather than just visual style or theme.",
         )}
       </p>
+      {!value.pairs.length && <Notice>{t("至少需要熟悉两款游戏才能比较，可在修改熟悉的游戏后重试。", "Know at least two games to compare them. Update your familiar games to try again.")}</Notice>}
+      {value.done && value.pairs.length>0 && <Notice>{t("这页的评价已保存，下面显示原记录。", "These ratings are saved; your original responses are shown below.")}</Notice>}
       {value.pairs.map((pair: Any) => {
         const answer = answers.find((a) => a.key === pair.key);
         return (
@@ -1283,6 +1288,7 @@ export function GameSimilarity({
                   <label key={score} className={selected ? "selected" : ""}>
                     <input
                       type="radio"
+                      disabled={value.done}
                       name={"similarity-" + pair.key}
                       checked={selected}
                       onChange={() =>
@@ -1314,7 +1320,7 @@ export function GameSimilarity({
       {error && <Notice error>{error}</Notice>}
       <div className="submit-row">
         <Button disabled={busy} onClick={() => finish()}>
-          {t("保存并开始视频评价", "Save and start video reviews")}
+          {value.done?t("返回视频评价", "Back to video reviews"):t("保存并开始视频评价", "Save and start video reviews")}
           <ArrowRight size={16} />
         </Button>
         <button
@@ -1338,6 +1344,7 @@ export function ParticipantStudy() {
     [saved, setSaved] = useState(""),
     [paused, setPaused] = useState(false),
     [editingGames, setEditingGames] = useState(false),
+    [viewSimilarity,setViewSimilarity]=useState(false),
     queues = useRef<Record<string, Promise<void>>>({}),
     currentId = useRef("");
   const refresh = useCallback(async () => {
@@ -1563,13 +1570,13 @@ export function ParticipantStudy() {
         </p>
       </div>
     );
-  else if (state.similarity && !state.similarity.done)
+  else if (state.similarity && (!state.similarity.done || viewSimilarity))
     content = (
       <GameSimilarity
         key={state.participant.id}
         participantId={state.participant.id}
         value={state.similarity}
-        onComplete={refresh}
+        onComplete={async()=>{setViewSimilarity(false);await refresh();}}
       />
     );
   else if (paused)
@@ -1699,6 +1706,7 @@ export function ParticipantStudy() {
           <button className="text-button" onClick={() => setEditingGames(true)}>
             {t("修改熟悉的游戏", "Update familiar games")}
           </button>
+          <button className="text-button" style={{marginLeft:20}} onClick={()=>setViewSimilarity(true)}>{t("游戏机制比较", "Game comparisons")}</button>
         </div>
       )}
       {content}

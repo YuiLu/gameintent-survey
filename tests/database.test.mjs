@@ -68,3 +68,12 @@ test('mixed-game reservations stay within five reviewers under concurrent claims
  assert.equal(await db.finishParticipant('p0','s','now'),false);
  await pg.close();
 });
+
+test('repairs an actual stored array profile while preserving consent and saved fields',async()=>{
+ const pg=new PGlite();await pg.exec(fs.readFileSync('supabase/001_schema.sql','utf8'));
+ const db=createDatabase({query:async(s,v)=>(await pg.query(s,v)).rows,transaction:fn=>pg.transaction(tx=>fn(async(s,v)=>(await tx.query(s,v)).rows))});
+ const damaged=JSON.stringify([{games:['pubg','cs'],protocol:'blind-v1',similarity_games:['pubg','cs']},JSON.stringify({onboarding:'direct-v1'})]);
+ await pg.query('INSERT INTO survey.participants(id,game,resume_hash,profile,status,consented_at,created_at) VALUES($1,$2,$3,$4,$5,$6,$7)',['repair','pubg','fixture',damaged,'active','consent','now']);
+ const p=await db.repairProfile('repair');assert.deepEqual(JSON.parse(p.profile).games,['pubg','cs']);assert.equal(JSON.parse(p.profile).onboarding,'direct-v1');assert.equal(p.consented_at,'consent');
+ const saved=(await pg.query('SELECT profile FROM survey.participants WHERE id=$1',['repair'])).rows[0];assert.equal(Array.isArray(JSON.parse(saved.profile)),false);await pg.close();
+});

@@ -19,7 +19,7 @@ export function fourChoices(
   ] as any[];
   const size = reference.length,
     ids = new Set(reference.map((l) => l.id));
-  const negatives = labelsFor(question.game).filter((l) => !ids.has(l.id));
+  const negatives = labelsFor(question.game).filter((l) => l.id!=="other" && !ids.has(l.id));
   if (!size || negatives.length < size)
     throw Error("Insufficient same-game distractors");
   const seed = "four-choice-v1:" + generationSeed + ":" + question.id;
