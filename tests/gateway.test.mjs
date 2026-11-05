@@ -96,3 +96,32 @@ test('public HTTP API requests upgrade to HTTPS before forwarding any body or cr
     assert.equal(r.status,308);assert.equal(r.headers.get('location'),'https://survey.example/api/enroll?from=wechat');
   }
 });
+
+test('short media ticket bypasses Supabase only for its session and video', async (t) => {
+  const {issueMediaTicket} = await import('../lib/study/media-ticket.mjs');
+  const target = 'https://study-1250000000.cos.ap-shanghai.myqcloud.com/study-v2/videos/test_clip.mp4?q-sign-algorithm=sha1&q-signature=fixture';
+  const session = 'b'.repeat(48);
+  const path = '/api/media/test_clip';
+  const ticket = await issueMediaTicket(env.STUDY_GATEWAY_KEY, session, path, target);
+  const request = (p, cookie, token) => new Request('https://survey.example' + p + '?play=' + token, {
+    headers: {Cookie: 'gi_participant=' + cookie, Range: 'bytes=4-7'},
+  });
+  const fetchMock = async (url, init) => {
+    if (url === env.STUDY_API_URL) {
+      assert.ok(!JSON.parse(init.body).url.includes('play='));
+      return Response.json({error: 'denied'}, {status: 403});
+    }
+    assert.equal(url, target);
+    assert.deepEqual(init.headers, {Range: 'bytes=4-7'});
+    return new Response('clip', {status: 206, headers: {'Content-Range': 'bytes 4-7/10'}});
+  };
+  const valid = await proxyStudyApi(request(path, session, ticket), env, fetchMock);
+  assert.equal(valid.status, 206);
+  assert.equal(await valid.text(), 'clip');
+  assert.equal((await proxyStudyApi(request(path, 'c'.repeat(48), ticket), env, fetchMock)).status, 403);
+  assert.equal((await proxyStudyApi(request('/api/media/other_clip', session, ticket), env, fetchMock)).status, 403);
+  assert.equal((await proxyStudyApi(request(path, session, 'x' + ticket), env, fetchMock)).status, 403);
+  const expiredAt = Date.now() + 11 * 60_000;
+  t.mock.method(Date, 'now', () => expiredAt);
+  assert.equal((await proxyStudyApi(request(path, session, ticket), env, fetchMock)).status, 403);
+});

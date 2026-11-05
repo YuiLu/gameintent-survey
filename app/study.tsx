@@ -1154,7 +1154,7 @@ export function GameSimilarity({
 }: {
   participantId: string;
   value: Any;
-  onComplete: () => Promise<void>;
+  onComplete: (comparison: Any) => void;
 }) {
   const { t, language } = useLanguage();
   const cacheKey = "gi-draft-similarity-" + participantId;
@@ -1205,11 +1205,11 @@ export function GameSimilarity({
     return () => clearTimeout(timer);
   }, [answers]);
   async function finish(skip = false) {
-    if(value.done){await onComplete();return;}
+    if (value.done) { onComplete(value); return; }
     setBusy(true);
     setError("");
     try {
-      await api("similarity", {
+      const comparison = await api("similarity", {
         answers: skip
           ? value.pairs.map((p: Any) => ({
               key: p.key,
@@ -1222,7 +1222,7 @@ export function GameSimilarity({
       try {
         localStorage.removeItem(cacheKey);
       } catch {}
-      await onComplete();
+      onComplete(comparison);
       window.scrollTo(0, 0);
     } catch (e) {
       setError((e as Error).message);
@@ -1347,31 +1347,27 @@ export function ParticipantStudy() {
     [viewSimilarity,setViewSimilarity]=useState(false),
     queues = useRef<Record<string, Promise<void>>>({}),
     currentId = useRef("");
-  const refresh = useCallback(async () => {
-    let s = await api("me");
-    if (s.participant.status === "training" && !s.participant.qualified_at) {
-      await api("begin", {});
-      s = await api("me");
-    }
-    if (s.participant.profile.protocol !== "blind-v1") {
-      await api("blind/start", {});
-      s = await api("me");
-    }
-    if (["training", "active"].includes(s.participant.status)) {
-      if (
-        s.assignment &&
-        !s.assignment.question.blind_locked &&
-        !s.assignment.question.choice_options?.length &&
-        !s.assignment.question.label_choices?.length
-      ) {
-        await api("blind/start", {});
-        s = await api("me");
-      }
-      s.similarity = await api("similarity");
-    }
-    setState(s);
-    currentId.current = s.assignment?.id || "";
+  const applyState = useCallback((next: Any) => {
+    setState(next);
+    currentId.current = next.assignment?.id || "";
   }, []);
+  const refresh = useCallback(async () => {
+    let next = await api("me?view=study");
+    if (next.participant.status === "training" && !next.participant.qualified_at) {
+      const started = await api("begin?view=study", {});
+      next = started.participant ? started : await api("me?view=study");
+    }
+    if (next.participant.profile.protocol !== "blind-v1" ||
+        (next.assignment && !next.assignment.question.blind_locked &&
+         !next.assignment.question.choice_options?.length && !next.assignment.question.label_choices?.length)) {
+      await api("blind/start", {});
+      next = await api("me?view=study");
+    }
+    // During a rolling deploy an older backend may not include the comparison.
+    if (["training", "active"].includes(next.participant.status) && next.similarity === undefined)
+      next.similarity = await api("similarity");
+    applyState(next);
+  }, [applyState]);
   useEffect(() => {
     let live = true;
     Promise.allSettled([
@@ -1399,8 +1395,12 @@ export function ParticipantStudy() {
     setBusy(true);
     setError("");
     try {
-      await api("enroll", { ...data, protocol: "blind-v1" });
-      await refresh();
+      const enrollment = await api("enroll", { ...data, protocol: "blind-v1" });
+      if (enrollment.participant_id && !enrollment.resumed) {
+        const started = await api("begin?view=study", {});
+        if (started.participant) applyState(started);
+        else await refresh();
+      } else await refresh();
       setEditingGames(false);
       window.scrollTo(0, 0);
     } catch (e) {
@@ -1435,12 +1435,13 @@ export function ParticipantStudy() {
     setError("");
     const id = state.assignment.id;
     try {
-      await api("submit", { ...answer, assignment_id: id });
+      const submitted = await api("submit?view=study", { ...answer, assignment_id: id });
       try {
         localStorage.removeItem("gi-draft-" + id);
       } catch {}
       setSaved("");
-      await refresh();
+      if (submitted.state) applyState(submitted.state);
+      else await refresh();
       window.scrollTo(0, 0);
     } catch (e) {
       setError((e as Error).message);
@@ -1576,7 +1577,10 @@ export function ParticipantStudy() {
         key={state.participant.id}
         participantId={state.participant.id}
         value={state.similarity}
-        onComplete={async()=>{setViewSimilarity(false);await refresh();}}
+        onComplete={(comparison) => {
+          setViewSimilarity(false);
+          setState((previous: Any) => ({ ...previous, similarity: comparison }));
+        }}
       />
     );
   else if (paused)

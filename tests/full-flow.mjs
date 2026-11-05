@@ -59,14 +59,21 @@ assert.equal((await call('maintenance/media-ticket',{question_id:'TEST_cs_0',md5
 console.log('PASS: 374 synthetic questions; 165 balanced panels; 16 concurrent candidates / 15 slots; practice, consent, qualification, draft, idempotency, locked answers, cross-participant protection, automatic same-browser recovery, 5 complete reviewers, formal-only statistics, safe export, exclusion, refill and withdrawal. Synthetic records exist only in the isolated in-memory database.');
 // New participants start immediately; a half-finished old onboarding can use begin too.
 const direct=await call('enroll',{games:['dota','sc2'],protocol:'blind-v1',familiarity:3,experience:['play'],consent:true});const dh={Cookie:direct.cookie};
-assert.equal((await call('begin',{},dh)).status,200);const ds=(await call('me',undefined,dh)).data;
+const started=await call('begin?view=study',{},dh);assert.equal(started.status,200);const ds=started.data;
+assert.equal(ds.similarity.pairs.length,1);
 assert.equal(ds.participant.status,'active');assert.equal(ds.participant.profile.onboarding,'direct-v1');assert.equal(ds.practice.length,0);assert.ok(ds.assignment);assert.equal(ds.progress.done,0);
 assert.equal((await call('begin',{},dh)).status,200);assert.equal((await call('me',undefined,dh)).data.assignment.id,ds.assignment.id);
 const picked=ds.assignment.question.choice_options[0].id;
 assert.equal((await call('draft',{assignment_id:ds.assignment.id,choice_mode:'blind-four-v1',blind_choice_id:picked,blind_status:'selected'},dh)).status,200);
 assert.equal((await call('me',undefined,dh)).data.assignment.draft.blind_choice_id,picked);
 await call('blind-lock',{assignment_id:ds.assignment.id,choice_mode:'blind-four-v1',blind_choice_id:picked,blind_status:'selected',video_loaded:true,playback_seconds:2},dh);
-assert.equal((await call('submit',{assignment_id:ds.assignment.id,description_support:'fully_supported',video_loaded:true,playback_seconds:2},dh)).status,200);
+const next=await call('submit?view=study',{assignment_id:ds.assignment.id,description_support:'fully_supported',video_loaded:true,playback_seconds:2},dh);
+assert.equal(next.status,200);
+assert.equal(next.data.state.progress.done,1);
+assert.notEqual(next.data.state.assignment.id,ds.assignment.id);
+assert.deepEqual(next.data.state.similarity.pairs,ds.similarity.pairs);
+assert.equal(next.data.state.assignment.question.labels,undefined);
+
 assert.equal((await call('me',undefined,dh)).data.progress.done,1);
 assert.equal((await call('withdraw',{},dh)).status,200);
 const withdrawnExport=(await call('admin/export',undefined,ADMIN)).data;assert.equal(withdrawnExport.responses.filter(r=>r.participant_id===ds.participant.id).length,0);assert.equal(withdrawnExport.participants.find(p=>p.id===ds.participant.id).status,'withdrawn');
