@@ -226,7 +226,7 @@ function Options({
           <span>
             <strong>{language === "zh" ? o.title : o.en}</strong>
             {o.detail && (
-              <p>{language === "zh" ? o.detail : optionDetails[o.value]}</p>
+              <p>{language === "zh" ? o.detail : (o.detailEn || optionDetails[o.value])}</p>
             )}
           </span>
         </label>
@@ -465,7 +465,7 @@ export function Evaluation({
     const answer = {
       blind_labels: selected,
       ...(fourChoice
-        ? { choice_mode: "blind-four-v1", blind_choice_id: choiceId }
+        ? { choice_mode: "blind-four-v1", choice_variant: "four-plus-none-v1", blind_choice_id: choiceId }
         : {}),
       blind_status: status,
       label_support: labelSupport,
@@ -496,6 +496,7 @@ export function Evaluation({
         ...(fourChoice
           ? {
               choice_mode: "blind-four-v1",
+              choice_variant: "four-plus-none-v1",
               blind_choice_id: status === "selected" ? choiceId : null,
             }
           : {}),
@@ -751,6 +752,7 @@ export function Evaluation({
                 <Options
                   name="blind-status"
                   items={[
+                    ...(fourChoice ? [{value: "none", title: "以上都不是", en: "None of the above", detail: "能判断画面中的目标，但以上组合都不合适。", detailEn: "The goal is visible, but none of the supplied combinations fits."}] : []),
                     {
                       value: "insufficient",
                       title: "画面信息不足",
